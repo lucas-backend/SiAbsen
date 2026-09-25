@@ -15,10 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestampTz('email_verified_at', 6)->nullable();
             $table->string('password');
+            $table->string('role', 20);
+            $table->string('phone', 30)->nullable();
+            $table->date('birth_date')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestampTz('created_at', 6)->useCurrent();
+            $table->timestampTz('updated_at', 6);
+            $table->check("role IN ('STUDENT', 'TEACHER', 'ADMIN')", 'chk_users_role');
+            $table->index('role', 'idx_users_role');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
