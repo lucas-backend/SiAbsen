@@ -33,6 +33,9 @@ class DatabaseSeeder extends Seeder
                 $classes[] = DB::table('classes')->insertGetId([
                     'name' => $name,
                     'education_level_id' => $levelId,
+                    'latitude' => -6.2000000,
+                    'longitude' => 106.8166660,
+                    'radius_meters' => 50,
                     'created_at' => $now,
                     'updated_at' => $now
                 ]);
@@ -105,6 +108,7 @@ class DatabaseSeeder extends Seeder
                     'class_id' => $classId,
                     'student_id' => $studentId,
                     'is_active' => true,
+                    'academic_year' => '2026/2027',
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]);
@@ -134,7 +138,7 @@ class DatabaseSeeder extends Seeder
                 // Create 5 attendance sessions per assignment
                 for ($sessionNum = 1; $sessionNum <= 5; $sessionNum++) {
                     $sessionDate = clone $now;
-                    $sessionDate->subDays(rand(1, 30));
+                    $sessionDate->subDays($sessionNum * 2); // Ensure unique date for each session
 
                     $sessionId = DB::table('attendance_sessions')->insertGetId([
                         'assignment_id' => $assignmentId,
@@ -144,6 +148,8 @@ class DatabaseSeeder extends Seeder
                         'end_at' => (clone $sessionDate)->addHours(2),
                         'qr_payload' => Str::random(40),
                         'created_by' => $teacherId,
+                        'latitude' => -6.2000000,
+                        'longitude' => 106.8166660,
                         'created_at' => $sessionDate,
                         'updated_at' => $sessionDate,
                     ]);
@@ -154,12 +160,20 @@ class DatabaseSeeder extends Seeder
                             $statuses = ['HADIR', 'HADIR', 'HADIR', 'HADIR', 'TERLAMBAT', 'TIDAK_HADIR'];
                             $status = $statuses[array_rand($statuses)];
                             
+                            if ($status === 'TIDAK_HADIR') {
+                                continue;
+                            }
+                            
                             DB::table('attendance_records')->insert([
                                 'session_id' => $sessionId,
                                 'student_id' => $studentId,
-                                'scanned_at' => $status === 'TIDAK_HADIR' ? null : clone $sessionDate->addMinutes(rand(0, 30)),
+                                'scanned_at' => clone $sessionDate->addMinutes(rand(0, 30)),
                                 'status' => $status,
                                 'late_minutes' => $status === 'TERLAMBAT' ? rand(10, 30) : 0,
+                                'latitude' => -6.2000000 + (rand(-100, 100) / 1000000),
+                                'longitude' => 106.8166660 + (rand(-100, 100) / 1000000),
+                                'distance_meters' => rand(5, 60),
+                                'location_status' => (rand(1, 100) <= 80 ? 'SESUAI' : 'DI_LUAR_RADIUS'), // 80% chance SESUAI
                                 'created_at' => $sessionDate,
                                 'updated_at' => $sessionDate,
                             ]);
