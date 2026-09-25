@@ -34,7 +34,7 @@ psql --version
 ### 1. Clone repository
 
 ```bash
-git clone <url-repository>
+git clone https://github.com/lucas-backend/SiAbsen
 cd siabsen
 ```
 
