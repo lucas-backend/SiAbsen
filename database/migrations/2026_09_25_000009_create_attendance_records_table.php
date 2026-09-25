@@ -24,14 +24,14 @@ return new class extends Migration
             $table->timestampTz('created_at', 6)->useCurrent();
             $table->timestampTz('updated_at', 6);
             $table->unique(['session_id', 'student_id'], 'uq_attendance_records_session_student');
-            $table->check(
-                "status IN ('HADIR', 'TERLAMBAT', 'TIDAK_HADIR')",
-                'chk_attendance_records_status'
-            );
-            $table->check(
-                'late_minutes IS NULL OR late_minutes >= 0',
-                'chk_attendance_records_late_minutes'
-            );
+            // $table->check(
+            //     "status IN ('HADIR', 'TERLAMBAT', 'TIDAK_HADIR')",
+            //     'chk_attendance_records_status'
+            // );
+            // $table->check(
+            //     'late_minutes IS NULL OR late_minutes >= 0',
+            //     'chk_attendance_records_late_minutes'
+            // );
             $table->index(['student_id', 'scanned_at'], 'idx_attendance_records_student_scanned');
             $table->index(['session_id', 'status'], 'idx_attendance_records_session_status');
         });

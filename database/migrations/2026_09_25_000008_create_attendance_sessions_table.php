@@ -26,7 +26,7 @@ return new class extends Migration
                 ['assignment_id', 'session_date', 'start_at', 'end_at'],
                 'uq_attendance_sessions_assignment_date_time'
             );
-            $table->check('end_at > start_at', 'chk_attendance_sessions_time');
+            // $table->check('end_at > start_at', 'chk_attendance_sessions_time');
             $table->foreign(['assignment_id', 'class_id'], 'fk_attendance_sessions_assignment_class')
                 ->references(['id', 'class_id'])
                 ->on('teacher_assignments')

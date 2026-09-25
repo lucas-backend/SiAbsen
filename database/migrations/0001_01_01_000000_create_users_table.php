@@ -23,7 +23,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestampTz('created_at', 6)->useCurrent();
             $table->timestampTz('updated_at', 6);
-            $table->check("role IN ('STUDENT', 'TEACHER', 'ADMIN')", 'chk_users_role');
+            // $table->check("role IN ('STUDENT', 'TEACHER', 'ADMIN')", 'chk_users_role');
             $table->index('role', 'idx_users_role');
         });
 
