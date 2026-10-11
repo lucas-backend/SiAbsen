@@ -8,6 +8,7 @@ use App\Models\SchoolClass;
 use App\Models\TeacherAssignment;
 use App\Models\User;
 use App\Policies\AttendanceRecordPolicy;
+use App\Policies\AttendanceReportPolicy;
 use App\Policies\AttendanceSessionPolicy;
 use App\Policies\ClassRoomPolicy;
 use App\Policies\TeacherAssignmentPolicy;
@@ -80,5 +81,7 @@ class AppServiceProvider extends ServiceProvider
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
+
+        Gate::policy('attendance-report', AttendanceReportPolicy::class);
     }
 }

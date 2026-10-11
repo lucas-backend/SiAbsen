@@ -4,6 +4,7 @@ import { ArrowRight, Camera, LogOut, QrCode, UserCheck } from 'lucide-react';
 import { apiRequest } from '@/lib/api';
 import { logout } from '@/routes';
 import attendance from '@/routes/attendance';
+import reports from '@/routes/reports';
 import student from '@/routes/student';
 import teacher from '@/routes/teacher';
 import type {
@@ -278,6 +279,15 @@ export default function Dashboard() {
                         <span>Tampilan Guru</span>
                         <ArrowRight size={14} />
                     </Link>
+                    {!isStudent && (
+                        <Link
+                            href={reports.index()}
+                            className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-3 text-xs font-semibold text-[#1E3A8A] shadow-xs hover:bg-blue-50/50"
+                        >
+                            <span>Rekap Absensi</span>
+                            <ArrowRight size={14} />
+                        </Link>
+                    )}
                 </div>
 
                 <div className="mt-6 px-5">

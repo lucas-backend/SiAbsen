@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcademicSearchController;
 use App\Http\Controllers\AttendanceAssignmentController;
+use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\AttendanceRequestController;
 use App\Http\Controllers\AttendanceScanController;
 use App\Http\Controllers\AttendanceSessionController;
@@ -22,6 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('attendance/assignments', AttendanceAssignmentController::class)->name('attendance.assignments.index');
 
         Route::get('academic/search', AcademicSearchController::class)->name('academic.search');
+
+        Route::get('reports', [AttendanceReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/search', [AttendanceReportController::class, 'search'])->name('reports.search');
+        Route::get('reports/data', [AttendanceReportController::class, 'data'])->name('reports.data');
+        Route::get('reports/export', [AttendanceReportController::class, 'export'])->name('reports.export');
     });
 
     Route::middleware(['role:STUDENT'])->group(function () {
