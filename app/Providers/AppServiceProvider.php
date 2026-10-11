@@ -2,14 +2,31 @@
 
 namespace App\Providers;
 
+use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
+use App\Models\SchoolClass;
+use App\Models\TeacherAssignment;
+use App\Policies\AttendanceRecordPolicy;
+use App\Policies\AttendanceReportPolicy;
+use App\Policies\AttendanceSessionPolicy;
+use App\Policies\ClassRoomPolicy;
+use App\Policies\TeacherAssignmentPolicy;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
+    protected $policies = [
+        AttendanceSession::class => AttendanceSessionPolicy::class,
+        AttendanceRecord::class => AttendanceRecordPolicy::class,
+        SchoolClass::class => ClassRoomPolicy::class,
+        TeacherAssignment::class => TeacherAssignmentPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */
@@ -24,6 +41,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->registerPolicies();
+
+        Gate::before(function ($user, $ability) {
+            if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+                return true;
+            }
+
+            return null;
+        });
     }
 
     /**
@@ -46,5 +72,12 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    protected function registerPolicies(): void
+    {
+        foreach ($this->policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
     }
 }
