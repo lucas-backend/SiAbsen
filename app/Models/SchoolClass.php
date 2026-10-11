@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use Database\Factories\SchoolClassFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SchoolClass extends Model
 {
+    /** @use HasFactory<SchoolClassFactory> */
+    use HasFactory;
+
     protected $table = 'classes';
 
     protected $fillable = [
@@ -40,6 +46,28 @@ class SchoolClass extends Model
     public function classStudents(): HasMany
     {
         return $this->hasMany(ClassStudent::class, 'class_id');
+    }
+
+    /**
+     * Users currently placed in this class.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'class_students', 'class_id', 'student_id')
+            ->wherePivot('is_active', true)
+            ->withPivot(['academic_year', 'is_active']);
+    }
+
+    /**
+     * Alias for the active students relation.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function activeStudents(): BelongsToMany
+    {
+        return $this->students();
     }
 
     /** @return HasMany<TeacherAssignment, $this> */

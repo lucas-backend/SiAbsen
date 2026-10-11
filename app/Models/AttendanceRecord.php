@@ -2,11 +2,30 @@
 
 namespace App\Models;
 
+use App\Enums\AttendanceStatus;
+use Database\Factories\AttendanceRecordFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $session_id
+ * @property int $student_id
+ * @property Carbon $scanned_at
+ * @property AttendanceStatus $status
+ * @property int|null $late_minutes
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $distance_meters
+ * @property string|null $location_status
+ */
 class AttendanceRecord extends Model
 {
+    /** @use HasFactory<AttendanceRecordFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'session_id',
         'student_id',
@@ -23,6 +42,7 @@ class AttendanceRecord extends Model
     {
         return [
             'scanned_at' => 'immutable_datetime',
+            'status' => AttendanceStatus::class,
             'late_minutes' => 'integer',
             'latitude' => 'float',
             'longitude' => 'float',

@@ -2,12 +2,32 @@
 
 namespace App\Models;
 
+use Database\Factories\AttendanceSessionFactory;
+use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $assignment_id
+ * @property int $class_id
+ * @property Carbon $session_date
+ * @property Carbon $start_at
+ * @property Carbon $end_at
+ * @property string $qr_payload
+ * @property int $created_by
+ * @property float|null $latitude
+ * @property float|null $longitude
+ */
 class AttendanceSession extends Model
 {
+    /** @use HasFactory<AttendanceSessionFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'assignment_id',
         'class_id',
@@ -61,5 +81,14 @@ class AttendanceSession extends Model
             AttendanceRecord::class,
             'session_id'
         );
+    }
+
+    /**
+     * @param  Builder<AttendanceSession>  $query
+     * @return Builder<AttendanceSession>
+     */
+    public function scopeOnDate(Builder $query, DateTimeInterface|string $date): Builder
+    {
+        return $query->whereDate('session_date', $date);
     }
 }

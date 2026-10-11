@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -19,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property string $role
+ * @property UserRole $role
  * @property string|null $phone
  * @property Carbon|null $birth_date
  * @property string|null $two_factor_secret
@@ -46,7 +47,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => 'string',
+            'role' => UserRole::class,
             'birth_date' => 'date',
         ];
     }
@@ -64,7 +65,7 @@ class User extends Authenticatable
     }
 
     /** @return HasMany<ClassStudent, $this> */
-    public function classMemberships(): HasMany
+    public function classStudents(): HasMany
     {
         return $this->hasMany(ClassStudent::class, 'student_id');
     }

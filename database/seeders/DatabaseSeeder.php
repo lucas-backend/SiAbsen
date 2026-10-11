@@ -2,182 +2,158 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
+use App\Enums\AttendanceStatus;
+use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
+use App\Models\ClassStudent;
+use App\Models\EducationLevel;
+use App\Models\SchoolClass;
+use App\Models\SchoolSetting;
+use App\Models\StudentProfile;
+use App\Models\Subject;
+use App\Models\TeacherAssignment;
+use App\Models\TeacherProfile;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $now = Carbon::now();
-        $password = Hash::make('password');
+        // 1. School geofence setting
+        SchoolSetting::factory()->create([
+            'name' => 'SMP Negeri 1 Jakarta',
+            'latitude' => -6.2000000,
+            'longitude' => 106.8166660,
+            'radius_meters' => 50,
+        ]);
 
-        // 1. Education Levels
-        $levelSd = DB::table('education_levels')->insertGetId(['name' => 'SD', 'created_at' => $now, 'updated_at' => $now]);
-        $levelSmp = DB::table('education_levels')->insertGetId(['name' => 'SMP', 'created_at' => $now, 'updated_at' => $now]);
-        $levelSma = DB::table('education_levels')->insertGetId(['name' => 'SMA', 'created_at' => $now, 'updated_at' => $now]);
+        // 2. Education levels
+        $levelSd = EducationLevel::factory()->create(['name' => 'SD']);
+        $levelSmp = EducationLevel::factory()->create(['name' => 'SMP']);
+        $levelSma = EducationLevel::factory()->create(['name' => 'SMA']);
 
-        // 2. Classes
+        // 3. Classes
         $classes = [];
         $classNames = [
-            $levelSd => ['Kelas 1A', 'Kelas 1B', 'Kelas 2A', 'Kelas 3A'],
-            $levelSmp => ['Kelas 7A', 'Kelas 7B', 'Kelas 8A', 'Kelas 9A'],
-            $levelSma => ['Kelas 10 MIPA 1', 'Kelas 10 IPS 1', 'Kelas 11 MIPA 1', 'Kelas 12 MIPA 1'],
+            $levelSd->id => ['Kelas 1A', 'Kelas 1B', 'Kelas 2A', 'Kelas 3A'],
+            $levelSmp->id => ['Kelas 7A', 'Kelas 7B', 'Kelas 8A', 'Kelas 9A'],
+            $levelSma->id => ['Kelas 10 MIPA 1', 'Kelas 10 IPS 1', 'Kelas 11 MIPA 1', 'Kelas 12 MIPA 1'],
         ];
 
         foreach ($classNames as $levelId => $names) {
             foreach ($names as $name) {
-                $classes[] = DB::table('classes')->insertGetId([
+                $classes[] = SchoolClass::factory()->create([
                     'name' => $name,
                     'education_level_id' => $levelId,
-                    'latitude' => -6.2000000,
-                    'longitude' => 106.8166660,
-                    'radius_meters' => 50,
-                    'created_at' => $now,
-                    'updated_at' => $now,
                 ]);
             }
         }
 
-        // 3. Subjects
-        $subjects = [];
+        // 4. Subjects
         $subjectNames = ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Pendidikan Agama', 'PJOK', 'Seni Budaya'];
+        $subjects = [];
         foreach ($subjectNames as $subjectName) {
-            $subjects[] = DB::table('subjects')->insertGetId(['name' => $subjectName, 'created_at' => $now, 'updated_at' => $now]);
+            $subjects[] = Subject::factory()->create(['name' => $subjectName]);
         }
 
-        // 4. Admin
-        DB::table('users')->insert([
+        // 5. Admin
+        User::factory()->admin()->create([
             'name' => 'Admin Utama',
             'email' => 'admin@siabsen.com',
-            'password' => $password,
-            'role' => 'ADMIN',
             'phone' => '081234567890',
-            'created_at' => $now,
-            'updated_at' => $now,
         ]);
 
-        // 5. Teachers
+        // 6. Teachers
         $teacherIds = [];
         for ($i = 1; $i <= 10; $i++) {
-            $teacherId = DB::table('users')->insertGetId([
+            $teacher = User::factory()->teacher()->create([
                 'name' => 'Guru '.$i,
                 'email' => "guru{$i}@siabsen.com",
-                'password' => $password,
-                'role' => 'TEACHER',
                 'phone' => '0812345600'.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
-                'created_at' => $now,
-                'updated_at' => $now,
             ]);
 
-            DB::table('teacher_profiles')->insert([
-                'user_id' => $teacherId,
+            TeacherProfile::factory()->create([
+                'user_id' => $teacher->id,
             ]);
-            $teacherIds[] = $teacherId;
+
+            $teacherIds[] = $teacher->id;
         }
 
-        // 6. Students
+        // 7. Students
         $studentIds = [];
         $studentCounter = 1;
-        foreach ($classes as $classId) {
-            // 10 students per class
+        foreach ($classes as $class) {
             for ($s = 1; $s <= 10; $s++) {
-                $studentId = DB::table('users')->insertGetId([
+                $student = User::factory()->student()->create([
                     'name' => 'Siswa '.$studentCounter,
                     'email' => "siswa{$studentCounter}@siabsen.com",
-                    'password' => $password,
-                    'role' => 'STUDENT',
                     'phone' => '08523456'.str_pad((string) $studentCounter, 4, '0', STR_PAD_LEFT),
-                    'created_at' => $now,
-                    'updated_at' => $now,
                 ]);
 
-                // We get the actual education_level_id for this class
-                $classInfo = DB::table('classes')->where('id', $classId)->first();
-
-                DB::table('student_profiles')->insert([
-                    'user_id' => $studentId,
+                StudentProfile::factory()->create([
+                    'user_id' => $student->id,
                     'student_number' => 'NISN'.str_pad((string) $studentCounter, 6, '0', STR_PAD_LEFT),
-                    'education_level_id' => $classInfo->education_level_id,
+                    'education_level_id' => $class->education_level_id,
                 ]);
 
-                DB::table('class_students')->insert([
-                    'class_id' => $classId,
-                    'student_id' => $studentId,
-                    'is_active' => true,
+                ClassStudent::factory()->create([
+                    'class_id' => $class->id,
+                    'student_id' => $student->id,
                     'academic_year' => '2026/2027',
-                    'created_at' => $now,
-                    'updated_at' => $now,
                 ]);
 
-                $studentIds[$classId][] = $studentId;
+                $studentIds[$class->id][] = $student->id;
                 $studentCounter++;
             }
         }
 
-        // 7. Teacher Assignments & Attendance
-        foreach ($classes as $classId) {
-            // Assign 2 random teachers per class
-            $assignedTeachers = array_rand(array_flip($teacherIds), 2);
-            // Assign 2 random subjects
-            $assignedSubjects = array_rand(array_flip($subjects), 2);
+        // 8. Teacher assignments & attendance
+        foreach ($classes as $class) {
+            $assignedTeachers = collect($teacherIds)->random(2)->all();
+            $assignedSubjects = collect($subjects)->random(2)->all();
 
             foreach ($assignedTeachers as $index => $teacherId) {
-                $assignmentId = DB::table('teacher_assignments')->insertGetId([
+                $assignment = TeacherAssignment::factory()->create([
                     'teacher_id' => $teacherId,
-                    'subject_id' => $assignedSubjects[$index],
-                    'class_id' => $classId,
-                    'is_active' => true,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'subject_id' => $assignedSubjects[$index]->id,
+                    'class_id' => $class->id,
                 ]);
 
-                // Create 5 attendance sessions per assignment
                 for ($sessionNum = 1; $sessionNum <= 5; $sessionNum++) {
-                    $sessionDate = clone $now;
-                    $sessionDate->subDays($sessionNum * 2); // Ensure unique date for each session
+                    $sessionDate = now()->subDays($sessionNum * 2);
 
-                    $sessionId = DB::table('attendance_sessions')->insertGetId([
-                        'assignment_id' => $assignmentId,
-                        'class_id' => $classId,
-                        'session_date' => $sessionDate->toDateString(),
-                        'start_at' => $sessionDate,
-                        'end_at' => (clone $sessionDate)->addHours(2),
-                        'qr_payload' => Str::random(40),
+                    $session = AttendanceSession::factory()->onDate($sessionDate)->create([
+                        'assignment_id' => $assignment->id,
+                        'class_id' => $class->id,
                         'created_by' => $teacherId,
-                        'latitude' => -6.2000000,
-                        'longitude' => 106.8166660,
-                        'created_at' => $sessionDate,
-                        'updated_at' => $sessionDate,
                     ]);
 
-                    // Add attendance records for all students in this class
-                    if (isset($studentIds[$classId])) {
-                        foreach ($studentIds[$classId] as $studentId) {
-                            $statuses = ['HADIR', 'HADIR', 'HADIR', 'HADIR', 'TERLAMBAT', 'TIDAK_HADIR'];
-                            $status = $statuses[array_rand($statuses)];
+                    foreach ($studentIds[$class->id] ?? [] as $studentId) {
+                        $roll = random_int(1, 10);
 
-                            if ($status === 'TIDAK_HADIR') {
-                                continue;
-                            }
-
-                            DB::table('attendance_records')->insert([
-                                'session_id' => $sessionId,
-                                'student_id' => $studentId,
-                                'scanned_at' => clone $sessionDate->addMinutes(rand(0, 30)),
-                                'status' => $status,
-                                'late_minutes' => $status === 'TERLAMBAT' ? rand(10, 30) : 0,
-                                'latitude' => -6.2000000 + (rand(-100, 100) / 1000000),
-                                'longitude' => 106.8166660 + (rand(-100, 100) / 1000000),
-                                'distance_meters' => rand(5, 60),
-                                'location_status' => (rand(1, 100) <= 80 ? 'SESUAI' : 'DI_LUAR_RADIUS'), // 80% chance SESUAI
-                                'created_at' => $sessionDate,
-                                'updated_at' => $sessionDate,
-                            ]);
+                        if ($roll > 8) {
+                            // Tidak hadir: not scanned, computed at read time.
+                            continue;
                         }
+
+                        $status = $roll > 5
+                            ? AttendanceStatus::Terlambat
+                            : AttendanceStatus::Hadir;
+
+                        AttendanceRecord::factory()->create([
+                            'session_id' => $session->id,
+                            'student_id' => $studentId,
+                            'scanned_at' => $sessionDate->copy()->addMinutes(random_int(0, 30)),
+                            'status' => $status,
+                            'late_minutes' => $status === AttendanceStatus::Terlambat
+                                ? random_int(10, 30)
+                                : 0,
+                            'latitude' => -6.2000000 + (random_int(-100, 100) / 1000000),
+                            'longitude' => 106.8166660 + (random_int(-100, 100) / 1000000),
+                            'distance_meters' => random_int(5, 60),
+                            'location_status' => random_int(1, 100) <= 80 ? 'SESUAI' : 'DI_LUAR_RADIUS',
+                        ]);
                     }
                 }
             }
