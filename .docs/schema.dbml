@@ -1,0 +1,227 @@
+// ============================================================================
+// DBML skema SiAbsen
+// Konsisten dengan .docs/QUERY.sql dan hasil `migrate:fresh` pada PostgreSQL.
+// ----------------------------------------------------------------------------
+// Konvensi: PK BIGINT (identity), waktu TIMESTAMPTZ(6), nama snake_case.
+// Nilai role/status memakai VARCHAR + CHECK; di DBML ditulis sebagai `Note`
+// karena DBML tidak memiliki representasi CHECK constraint bawaan.
+// ============================================================================
+
+Table users {
+  id bigint [pk, increment]
+  name varchar(255) [not null]
+  email varchar(255) [unique, not null]
+  email_verified_at timestamptz(6)
+  password varchar(255) [not null]
+  role varchar(20) [not null, note: 'CHECK role IN (STUDENT, TEACHER, ADMIN)']
+  phone varchar(30)
+  birth_date date
+  remember_token varchar(100)
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+
+  Note: 'Index idx_users_role on (role)'
+}
+
+Table password_reset_tokens {
+  email varchar(255) [pk]
+  token varchar(255) [not null]
+  created_at timestamp(0)
+}
+
+Table sessions {
+  id varchar(255) [pk]
+  user_id bigint
+  ip_address varchar(45)
+  user_agent text
+  payload text [not null]
+  last_activity integer [not null]
+
+  Note: 'Indexes: sessions_user_id_index (user_id), sessions_last_activity_index (last_activity)'
+}
+
+Table cache {
+  key varchar(255) [pk]
+  value text [not null]
+  expiration bigint [not null]
+
+  Note: 'Index cache_expiration_index on (expiration)'
+}
+
+Table cache_locks {
+  key varchar(255) [pk]
+  owner varchar(255) [not null]
+  expiration bigint [not null]
+
+  Note: 'Index cache_locks_expiration_index on (expiration)'
+}
+
+Table jobs {
+  id bigint [pk, increment]
+  queue varchar(255) [not null]
+  payload text [not null]
+  attempts smallint [not null]
+  reserved_at integer
+  available_at integer [not null]
+  created_at integer [not null]
+
+  Note: 'Index jobs_queue_index on (queue)'
+}
+
+Table job_batches {
+  id varchar(255) [pk]
+  name varchar(255) [not null]
+  total_jobs integer [not null]
+  pending_jobs integer [not null]
+  failed_jobs integer [not null]
+  failed_job_ids text [not null]
+  options text
+  cancelled_at integer
+  created_at integer [not null]
+  finished_at integer
+}
+
+Table failed_jobs {
+  id bigint [pk, increment]
+  uuid varchar(255) [unique, not null]
+  connection varchar(255) [not null]
+  queue varchar(255) [not null]
+  payload text [not null]
+  exception text [not null]
+  failed_at timestamp(0) [default: 'CURRENT_TIMESTAMP', not null]
+
+  Note: 'Index failed_jobs_connection_queue_failed_at_index on (connection, queue, failed_at)'
+}
+
+Table education_levels {
+  id bigint [pk, increment]
+  name varchar(100) [unique, not null]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+}
+
+Table student_profiles {
+  user_id bigint [pk, ref: > users.id]
+  student_number varchar(50) [unique, not null]
+  education_level_id bigint [not null, ref: > education_levels.id]
+
+  Note: 'FK user_id ON DELETE CASCADE; FK education_level_id ON DELETE RESTRICT. Index idx_student_profiles_education_level on (education_level_id)'
+}
+
+Table teacher_profiles {
+  user_id bigint [pk, ref: > users.id]
+
+  Note: 'FK user_id ON DELETE CASCADE'
+}
+
+Table classes {
+  id bigint [pk, increment]
+  name varchar(100) [not null]
+  education_level_id bigint [not null, ref: > education_levels.id]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+  latitude numeric(10,7)
+  longitude numeric(10,7)
+  radius_meters integer [default: 50]
+
+  Note: 'Unique (education_level_id, name). FK education_level_id ON DELETE RESTRICT'
+}
+
+Table subjects {
+  id bigint [pk, increment]
+  name varchar(150) [unique, not null]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+}
+
+Table class_students {
+  id bigint [pk, increment]
+  class_id bigint [not null, ref: > classes.id]
+  student_id bigint [not null, ref: > users.id]
+  is_active boolean [default: true, not null]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+  academic_year varchar(9)
+
+  Note: 'Partial unique index uq_class_students_active_student on (student_id, academic_year) WHERE is_active. FK class_id & student_id ON DELETE RESTRICT. Indexes idx_class_students_student_active, idx_class_students_class_active'
+}
+
+Table teacher_assignments {
+  id bigint [pk, increment]
+  teacher_id bigint [not null, ref: > users.id]
+  class_id bigint [not null, ref: > classes.id]
+  subject_id bigint [not null, ref: > subjects.id]
+  is_active boolean [default: true, not null]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+
+  Note: 'Unique (id, class_id). Partial unique index uq_teacher_assignments_active_assignment on (teacher_id, class_id, subject_id) WHERE is_active. FKs ON DELETE RESTRICT'
+}
+
+Table attendance_sessions {
+  id bigint [pk, increment]
+  assignment_id bigint [not null]
+  class_id bigint [not null]
+  session_date date [not null]
+  start_at timestamptz(6) [not null]
+  end_at timestamptz(6) [not null, note: 'CHECK end_at > start_at']
+  qr_payload varchar(255) [unique, not null]
+  created_by bigint [not null, ref: > users.id]
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+  latitude numeric(10,7)
+  longitude numeric(10,7)
+
+  Note: 'Composite FK (assignment_id, class_id) -> teacher_assignments(id, class_id) ON DELETE RESTRICT. FK class_id -> classes.id RESTRICT. Unique (assignment_id, session_date, start_at, end_at). Indexes idx_attendance_sessions_assignment_time, idx_attendance_sessions_class_date, idx_attendance_sessions_created_by'
+}
+
+Table attendance_records {
+  id bigint [pk, increment]
+  session_id bigint [not null, ref: > attendance_sessions.id]
+  student_id bigint [not null, ref: > users.id]
+  scanned_at timestamptz(6) [not null]
+  status varchar(20) [not null, note: 'CHECK status IN (HADIR, TERLAMBAT, TIDAK_HADIR, IZIN, SAKIT)']
+  late_minutes integer [note: 'CHECK late_minutes IS NULL OR late_minutes >= 0']
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+  latitude numeric(10,7)
+  longitude numeric(10,7)
+  distance_meters integer
+  location_status varchar(20) [note: 'SESUAI / DI_LUAR_RADIUS / TIDAK_TERVERIFIKASI']
+
+  Note: 'Unique (session_id, student_id). FKs ON DELETE RESTRICT. Indexes idx_attendance_records_student_scanned, idx_attendance_records_session_status'
+}
+
+Table attendance_requests {
+  id bigint [pk, increment]
+  session_id bigint [not null, ref: > attendance_sessions.id]
+  student_id bigint [not null, ref: > users.id]
+  requested_status varchar(20) [not null, note: 'CHECK requested_status IN (IZIN, SAKIT, HADIR, TERLAMBAT)']
+  reason text
+  evidence_path varchar(255)
+  status varchar(20) [default: 'PENDING', not null, note: 'CHECK status IN (PENDING, APPROVED, REJECTED)']
+  reviewed_by bigint [ref: - users.id]
+  reviewed_at timestamptz(6)
+  created_at timestamptz(6) [default: 'CURRENT_TIMESTAMP', not null]
+  updated_at timestamptz(6) [not null]
+
+  Note: 'FK session_id & student_id ON DELETE CASCADE; FK reviewed_by ON DELETE SET NULL. Indexes idx_attendance_requests_session, idx_attendance_requests_student, idx_attendance_requests_status'
+}
+
+Table school_settings {
+  id bigint [pk, increment]
+  name varchar(150) [not null]
+  latitude numeric(10,7) [not null]
+  longitude numeric(10,7) [not null]
+  radius_meters integer [default: 50, not null]
+  created_at timestamptz(6)
+  updated_at timestamptz(6)
+}
+
+Ref: attendance_sessions.assignment_id > teacher_assignments.id
+Ref: attendance_sessions.class_id > classes.id
+Ref: teacher_assignments.class_id > classes.id
+Ref: teacher_assignments.teacher_id > users.id
+Ref: teacher_assignments.subject_id > subjects.id
+Ref: class_students.class_id > classes.id
+Ref: class_students.student_id > users.id
