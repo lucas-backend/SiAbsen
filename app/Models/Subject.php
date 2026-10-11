@@ -11,6 +11,7 @@ class Subject extends Model
         'name',
     ];
 
+    /** @return HasMany<TeacherAssignment, $this> */
     public function teacherAssignments(): HasMany
     {
         return $this->hasMany(

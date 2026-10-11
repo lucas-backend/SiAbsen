@@ -34,7 +34,7 @@ return new class extends Migration
 
         DB::statement(
             'CREATE UNIQUE INDEX uq_teacher_assignments_active_assignment '
-                . 'ON teacher_assignments (teacher_id, class_id, subject_id) WHERE is_active'
+                .'ON teacher_assignments (teacher_id, class_id, subject_id) WHERE is_active'
         );
     }
 

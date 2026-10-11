@@ -32,6 +32,7 @@ class AttendanceRecord extends Model
         ];
     }
 
+    /** @return BelongsTo<AttendanceSession, $this> */
     public function session(): BelongsTo
     {
         return $this->belongsTo(
@@ -40,6 +41,7 @@ class AttendanceRecord extends Model
         );
     }
 
+    /** @return BelongsTo<User, $this> */
     public function student(): BelongsTo
     {
         return $this->belongsTo(User::class, 'student_id');

@@ -27,6 +27,7 @@ class SchoolClass extends Model
         ];
     }
 
+    /** @return BelongsTo<EducationLevel, $this> */
     public function educationLevel(): BelongsTo
     {
         return $this->belongsTo(
@@ -35,16 +36,19 @@ class SchoolClass extends Model
         );
     }
 
+    /** @return HasMany<ClassStudent, $this> */
     public function classStudents(): HasMany
     {
         return $this->hasMany(ClassStudent::class, 'class_id');
     }
 
+    /** @return HasMany<TeacherAssignment, $this> */
     public function teacherAssignments(): HasMany
     {
         return $this->hasMany(TeacherAssignment::class, 'class_id');
     }
 
+    /** @return HasMany<AttendanceSession, $this> */
     public function attendanceSessions(): HasMany
     {
         return $this->hasMany(

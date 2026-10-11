@@ -28,7 +28,7 @@ return new class extends Migration
 
         DB::statement(
             'CREATE UNIQUE INDEX uq_class_students_active_student '
-                . 'ON class_students (student_id) WHERE is_active'
+                .'ON class_students (student_id) WHERE is_active'
         );
     }
 

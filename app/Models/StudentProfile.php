@@ -19,11 +19,13 @@ class StudentProfile extends Model
         'education_level_id',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @return BelongsTo<EducationLevel, $this> */
     public function educationLevel(): BelongsTo
     {
         return $this->belongsTo(

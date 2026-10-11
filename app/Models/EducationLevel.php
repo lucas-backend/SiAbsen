@@ -19,6 +19,7 @@ class EducationLevel extends Model
         ];
     }
 
+    /** @return HasMany<StudentProfile, $this> */
     public function studentProfiles(): HasMany
     {
         return $this->hasMany(
@@ -27,6 +28,7 @@ class EducationLevel extends Model
         );
     }
 
+    /** @return HasMany<SchoolClass, $this> */
     public function classes(): HasMany
     {
         return $this->hasMany(

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -26,7 +26,7 @@ return new class extends Migration
         DB::statement('DROP INDEX IF EXISTS uq_class_students_active_student');
         DB::statement(
             'CREATE UNIQUE INDEX uq_class_students_active_student '
-                . 'ON class_students (student_id, academic_year) WHERE is_active'
+                .'ON class_students (student_id, academic_year) WHERE is_active'
         );
 
         Schema::table('attendance_sessions', function (Blueprint $table) {
@@ -59,7 +59,7 @@ return new class extends Migration
         DB::statement('DROP INDEX IF EXISTS uq_class_students_active_student');
         DB::statement(
             'CREATE UNIQUE INDEX uq_class_students_active_student '
-                . 'ON class_students (student_id) WHERE is_active'
+                .'ON class_students (student_id) WHERE is_active'
         );
 
         Schema::table('class_students', function (Blueprint $table) {

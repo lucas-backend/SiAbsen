@@ -33,6 +33,7 @@ class AttendanceSession extends Model
         ];
     }
 
+    /** @return BelongsTo<TeacherAssignment, $this> */
     public function assignment(): BelongsTo
     {
         return $this->belongsTo(
@@ -41,16 +42,19 @@ class AttendanceSession extends Model
         );
     }
 
+    /** @return BelongsTo<SchoolClass, $this> */
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    /** @return HasMany<AttendanceRecord, $this> */
     public function records(): HasMany
     {
         return $this->hasMany(

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
                     'longitude' => 106.8166660,
                     'radius_meters' => 50,
                     'created_at' => $now,
-                    'updated_at' => $now
+                    'updated_at' => $now,
                 ]);
             }
         }
@@ -64,15 +64,15 @@ class DatabaseSeeder extends Seeder
         $teacherIds = [];
         for ($i = 1; $i <= 10; $i++) {
             $teacherId = DB::table('users')->insertGetId([
-                'name' => "Guru " . $i,
+                'name' => 'Guru '.$i,
                 'email' => "guru{$i}@siabsen.com",
                 'password' => $password,
                 'role' => 'TEACHER',
-                'phone' => "0812345600" . str_pad($i, 2, '0', STR_PAD_LEFT),
+                'phone' => '0812345600'.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
-            
+
             DB::table('teacher_profiles')->insert([
                 'user_id' => $teacherId,
             ]);
@@ -86,11 +86,11 @@ class DatabaseSeeder extends Seeder
             // 10 students per class
             for ($s = 1; $s <= 10; $s++) {
                 $studentId = DB::table('users')->insertGetId([
-                    'name' => "Siswa " . $studentCounter,
+                    'name' => 'Siswa '.$studentCounter,
                     'email' => "siswa{$studentCounter}@siabsen.com",
                     'password' => $password,
                     'role' => 'STUDENT',
-                    'phone' => "08523456" . str_pad($studentCounter, 4, '0', STR_PAD_LEFT),
+                    'phone' => '08523456'.str_pad((string) $studentCounter, 4, '0', STR_PAD_LEFT),
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]);
@@ -100,8 +100,8 @@ class DatabaseSeeder extends Seeder
 
                 DB::table('student_profiles')->insert([
                     'user_id' => $studentId,
-                    'student_number' => 'NISN' . str_pad($studentCounter, 6, '0', STR_PAD_LEFT),
-                    'education_level_id' => $classInfo->education_level_id, 
+                    'student_number' => 'NISN'.str_pad((string) $studentCounter, 6, '0', STR_PAD_LEFT),
+                    'education_level_id' => $classInfo->education_level_id,
                 ]);
 
                 DB::table('class_students')->insert([
@@ -159,11 +159,11 @@ class DatabaseSeeder extends Seeder
                         foreach ($studentIds[$classId] as $studentId) {
                             $statuses = ['HADIR', 'HADIR', 'HADIR', 'HADIR', 'TERLAMBAT', 'TIDAK_HADIR'];
                             $status = $statuses[array_rand($statuses)];
-                            
+
                             if ($status === 'TIDAK_HADIR') {
                                 continue;
                             }
-                            
+
                             DB::table('attendance_records')->insert([
                                 'session_id' => $sessionId,
                                 'student_id' => $studentId,
