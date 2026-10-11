@@ -31,25 +31,26 @@ acak, data siswa/kelas di-hardcode, dan tidak ada kamera/geolokasi sungguhan. Se
 itu muncul **regresi keamanan**: route `dashboard` dan route domain baru **tidak lagi
 dilindungi middleware `auth`/`verified`**, sehingga dashboard dapat diakses tanpa login.
 
-| Aspek | Status | Keterangan |
-| --- | --- | --- |
-| Migrasi database (14 migrasi) | **Baik** | Berjalan di SQLite; PostgreSQL belum terverifikasi |
-| Seeder data contoh | **Baik** | Berjalan; ±1.000 record absensi |
-| Model Eloquent domain | **Sebagian** | 10 model ada; belum ada enum/cast & sebagian relasi |
-| Enum & cast (`UserRole`, `AttendanceStatus`) | **Kosong** | `role`/`status` masih string bebas |
-| Relasi Eloquent | **Sebagian** | Relasi navigasi ada; `belongsToMany` siswa–kelas belum |
-| Policy / otorisasi | **Kosong** | Tidak ada folder `app/Policies` |
-| Controller / route data domain | **Kosong** | Hanya route Inertia tanpa data |
-| Halaman frontend domain | **Mockup statis** | Ada UI, belum terhubung backend/kamera |
-| Factory & test domain | **Kosong** | Hanya `UserFactory` |
-| Middleware proteksi route | **Regresi** | `dashboard`/domain tanpa `auth`/`verified` |
-| Test suite (`php artisan test`) | **Gagal** | 4 lulus, 1 gagal, 16 error (`users.role`), 3 skip |
-| Lint backend (`pint --test`) | **Gagal** | 5 berkas perlu diformat |
-| Static analysis (`phpstan`) | **Tak terverifikasi** | Crash PHP memory limit 128M |
-| Sinkronisasi dokumen vs kode | **Tidak sinkron** | `school_settings` & geofencing belum terdokumentasi |
-| Identitas aplikasi | **Masih starter kit** | Tautan sidebar, tipe `User`, `APP_NAME` |
+| Aspek                                        | Status                | Keterangan                                             |
+| -------------------------------------------- | --------------------- | ------------------------------------------------------ |
+| Migrasi database (14 migrasi)                | **Baik**              | Berjalan di SQLite; PostgreSQL belum terverifikasi     |
+| Seeder data contoh                           | **Baik**              | Berjalan; ±1.000 record absensi                        |
+| Model Eloquent domain                        | **Sebagian**          | 10 model ada; belum ada enum/cast & sebagian relasi    |
+| Enum & cast (`UserRole`, `AttendanceStatus`) | **Kosong**            | `role`/`status` masih string bebas                     |
+| Relasi Eloquent                              | **Sebagian**          | Relasi navigasi ada; `belongsToMany` siswa–kelas belum |
+| Policy / otorisasi                           | **Kosong**            | Tidak ada folder `app/Policies`                        |
+| Controller / route data domain               | **Kosong**            | Hanya route Inertia tanpa data                         |
+| Halaman frontend domain                      | **Mockup statis**     | Ada UI, belum terhubung backend/kamera                 |
+| Factory & test domain                        | **Kosong**            | Hanya `UserFactory`                                    |
+| Middleware proteksi route                    | **Regresi**           | `dashboard`/domain tanpa `auth`/`verified`             |
+| Test suite (`php artisan test`)              | **Gagal**             | 4 lulus, 1 gagal, 16 error (`users.role`), 3 skip      |
+| Lint backend (`pint --test`)                 | **Gagal**             | 5 berkas perlu diformat                                |
+| Static analysis (`phpstan`)                  | **Tak terverifikasi** | Crash PHP memory limit 128M                            |
+| Sinkronisasi dokumen vs kode                 | **Tidak sinkron**     | `school_settings` & geofencing belum terdokumentasi    |
+| Identitas aplikasi                           | **Masih starter kit** | Tautan sidebar, tipe `User`, `APP_NAME`                |
 
 **Temuan paling kritis:**
+
 1. **Regresi keamanan** — `routes/web.php` tak lagi memakai `middleware(['auth','verified'])`;
    dashboard dan semua halaman domain dapat diakses tanpa autentikasi, dan test
    `DashboardTest` gagal.
@@ -59,17 +60,17 @@ dilindungi middleware `auth`/`verified`**, sehingga dashboard dapat diakses tanp
 
 ## 2. Metodologi & Bukti Eksekusi
 
-| Perintah | Hasil pada lingkungan ini |
-| --- | --- |
-| `php -m` (filter driver DB) | Hanya `pdo_sqlite`, `sqlite3`. `pdo_pgsql` **tidak ada** |
-| `php artisan key:generate --force` | Sukses |
-| `php artisan test` | **Gagal**: `tests: 24`, `passed: 4`, `failed: 1`, `errors: 16`, `skipped: 3` |
-| `vendor\bin\pint --test` | **Gagal**, 5 berkas (`User.php` + 3 migrasi + `DatabaseSeeder.php`) |
-| `vendor\bin\phpstan analyse` | **Gagal lingkungan**: `PHPStan process crashed ... memory limit: 128M` |
-| `node -v` / `npm -v` | `v26.7.0` / `12.0.2` |
-| `Test-Path public/build/manifest.json` | (Belum dibangun) |
-| Struktur `app/` | Hanya `Actions, Concerns, Http, Models, Providers` — **tanpa** `Enums/Policies/Services` |
-| `app/Http/Controllers` | Hanya `Controller`, `Settings\ProfileController`, `Settings\SecurityController` |
+| Perintah                               | Hasil pada lingkungan ini                                                                |
+| -------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `php -m` (filter driver DB)            | Hanya `pdo_sqlite`, `sqlite3`. `pdo_pgsql` **tidak ada**                                 |
+| `php artisan key:generate --force`     | Sukses                                                                                   |
+| `php artisan test`                     | **Gagal**: `tests: 24`, `passed: 4`, `failed: 1`, `errors: 16`, `skipped: 3`             |
+| `vendor\bin\pint --test`               | **Gagal**, 5 berkas (`User.php` + 3 migrasi + `DatabaseSeeder.php`)                      |
+| `vendor\bin\phpstan analyse`           | **Gagal lingkungan**: `PHPStan process crashed ... memory limit: 128M`                   |
+| `node -v` / `npm -v`                   | `v26.7.0` / `12.0.2`                                                                     |
+| `Test-Path public/build/manifest.json` | (Belum dibangun)                                                                         |
+| Struktur `app/`                        | Hanya `Actions, Concerns, Http, Models, Providers` — **tanpa** `Enums/Policies/Services` |
+| `app/Http/Controllers`                 | Hanya `Controller`, `Settings\ProfileController`, `Settings\SecurityController`          |
 
 > Catatan: karena `pdo_pgsql` tidak aktif, verifikasi PostgreSQL (partial index,
 > composite FK, `CHECK`) belum dapat dijalankan pada lingkungan ini. Status "baik"
@@ -83,18 +84,18 @@ dilindungi middleware `auth`/`verified`**, sehingga dashboard dapat diakses tanp
 
 Komit `7708c36 Models` menambahkan 10 model berikut:
 
-| Model | Tabel | Catatan |
-| --- | --- | --- |
-| `StudentProfile` | `student_profiles` | PK `user_id`, `timestamps = false` |
-| `TeacherProfile` | `teacher_profiles` | PK `user_id`, `timestamps = false` |
-| `EducationLevel` | `education_levels` | relasi `classes`, `studentProfiles` |
-| `SchoolClass` | `classes` (`$table`) | relasi jenjang, `classStudents`, `teacherAssignments`, `attendanceSessions` |
-| `Subject` | `subjects` | relasi `teacherAssignments` |
-| `ClassStudent` | `class_students` | relasi kelas & siswa |
-| `TeacherAssignment` | `teacher_assignments` | relasi guru, kelas, mapel, sesi |
-| `AttendanceSession` | `attendance_sessions` | relasi assignment, kelas, creator, records |
-| `AttendanceRecord` | `attendance_records` | relasi session, student |
-| `SchoolSetting` | `school_settings` | **tabel baru**, belum dirujuk siapa pun |
+| Model               | Tabel                 | Catatan                                                                     |
+| ------------------- | --------------------- | --------------------------------------------------------------------------- |
+| `StudentProfile`    | `student_profiles`    | PK `user_id`, `timestamps = false`                                          |
+| `TeacherProfile`    | `teacher_profiles`    | PK `user_id`, `timestamps = false`                                          |
+| `EducationLevel`    | `education_levels`    | relasi `classes`, `studentProfiles`                                         |
+| `SchoolClass`       | `classes` (`$table`)  | relasi jenjang, `classStudents`, `teacherAssignments`, `attendanceSessions` |
+| `Subject`           | `subjects`            | relasi `teacherAssignments`                                                 |
+| `ClassStudent`      | `class_students`      | relasi kelas & siswa                                                        |
+| `TeacherAssignment` | `teacher_assignments` | relasi guru, kelas, mapel, sesi                                             |
+| `AttendanceSession` | `attendance_sessions` | relasi assignment, kelas, creator, records                                  |
+| `AttendanceRecord`  | `attendance_records`  | relasi session, student                                                     |
+| `SchoolSetting`     | `school_settings`     | **tabel baru**, belum dirujuk siapa pun                                     |
 
 Yang **masih kurang** pada lapisan ini:
 
@@ -132,16 +133,17 @@ diampu; siswa hanya melihat riwayat sendiri; admin lintas jenjang).
   `Settings\SecurityController`. Tidak ada controller domain.
 - `routes/web.php:5-10` memakai `Route::inertia(...)` **tanpa controller dan tanpa data**:
 
-  ```php
-  Route::inertia('/', 'auth/login')->name('home');
-  Route::inertia('dashboard', 'dashboard')->name('dashboard');
-  Route::inertia('teacher/class', 'teacher/class-view')->name('teacher.class');
-  Route::inertia('student/scan', 'student/scanner')->name('student.scan');
-  Route::inertia('student/permission', 'student/permission')->name('student.permission');
-  ```
+    ```php
+    Route::inertia('/', 'auth/login')->name('home');
+    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::inertia('teacher/class', 'teacher/class-view')->name('teacher.class');
+    Route::inertia('student/scan', 'student/scanner')->name('student.scan');
+    Route::inertia('student/permission', 'student/permission')->name('student.permission');
+    ```
 
-  Tidak ada route untuk membuat sesi, memproses pemindaian, rekap, pencarian
-  bertingkat, atau persetujuan izin.
+    Tidak ada route untuk membuat sesi, memproses pemindaian, rekap, pencarian
+    bertingkat, atau persetujuan izin.
+
 - Tidak ada form request, service (`AttendanceService`, `GeofenceService`,
   `ReportService`), policy, job, event, listener, notification, maupun scheduler.
 
@@ -149,14 +151,14 @@ diampu; siswa hanya melihat riwayat sendiri; admin lintas jenjang).
 
 Komit `c156ebe update views` menambahkan halaman, tetapi **belum fungsional**:
 
-| Halaman | Keadaan |
-| --- | --- |
-| `pages/dashboard.tsx` | Jadwal & status di-hardcode; tombol ganti peran (`student`/`teacher`) lokal, bukan dari `role`; bandingkan `role` huruf kecil vs nilai DB `STUDENT/TEACHER` → selalu jatuh ke 'student' (`dashboard.tsx:12-16`) |
-| `pages/auth/login.tsx` | Splash 2 detik + form login; memakai URL hardcoded (`post('/login')`), bukan Wayfinder |
-| `pages/student/scanner.tsx` | **Simulasi acak** `Math.random() > 0.3` (`scanner.tsx:14-23`); **tidak ada kamera/QR**, tidak ada `navigator.geolocation` |
-| `pages/student/permission.tsx` | Hanya `alert()` lalu `router.visit('/dashboard')`; tidak memanggil backend; data siswa di-hardcode |
-| `pages/teacher/class-view.tsx` | Token QR & daftar siswa di-hardcode; "Ganti QR" hanya `alert()`; tombol edit menuju `/student/permission` (salah arahan) |
-| `components/modal-peringatan.tsx` | Dialog peringatan geofence; teks contoh belum dibersihkan |
+| Halaman                           | Keadaan                                                                                                                                                                                                         |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pages/dashboard.tsx`             | Jadwal & status di-hardcode; tombol ganti peran (`student`/`teacher`) lokal, bukan dari `role`; bandingkan `role` huruf kecil vs nilai DB `STUDENT/TEACHER` → selalu jatuh ke 'student' (`dashboard.tsx:12-16`) |
+| `pages/auth/login.tsx`            | Splash 2 detik + form login; memakai URL hardcoded (`post('/login')`), bukan Wayfinder                                                                                                                          |
+| `pages/student/scanner.tsx`       | **Simulasi acak** `Math.random() > 0.3` (`scanner.tsx:14-23`); **tidak ada kamera/QR**, tidak ada `navigator.geolocation`                                                                                       |
+| `pages/student/permission.tsx`    | Hanya `alert()` lalu `router.visit('/dashboard')`; tidak memanggil backend; data siswa di-hardcode                                                                                                              |
+| `pages/teacher/class-view.tsx`    | Token QR & daftar siswa di-hardcode; "Ganti QR" hanya `alert()`; tombol edit menuju `/student/permission` (salah arahan)                                                                                        |
+| `components/modal-peringatan.tsx` | Dialog peringatan geofence; teks contoh belum dibersihkan                                                                                                                                                       |
 
 Masalah pendukung:
 
@@ -219,6 +221,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 ```
 
 Akibatnya:
+
 - Dashboard dan halaman domain **dapat dibuka tanpa login**.
 - Test `DashboardTest::guests_are_redirected_to_the_login_page` **gagal**
   (`expected redirect, received 200`).
@@ -251,9 +254,9 @@ Karena `types/auth.ts` belum mendeklarasikan `role`, pembacaan dilakukan lewat
 
 ### 4.4 Tipe data migrasi ≠ DDL target (enum)
 
-| Aspek | Migrasi | `QUERY.sql` |
-| --- | --- | --- |
-| `users.role` | `VARCHAR(20)` | native enum `user_role` |
+| Aspek                       | Migrasi       | `QUERY.sql`                     |
+| --------------------------- | ------------- | ------------------------------- |
+| `users.role`                | `VARCHAR(20)` | native enum `user_role`         |
 | `attendance_records.status` | `VARCHAR(20)` | native enum `attendance_status` |
 
 Validasi nilai berbeda antara runtime Eloquent dan database, dan tidak ada constraint
@@ -261,11 +264,11 @@ yang menegakkan nilai sah.
 
 ### 4.5 Check constraint masih dikomentari
 
-| Aturan | Lokasi | Status |
-| --- | --- | --- |
-| `role IN ('STUDENT','TEACHER','ADMIN')` | `..._users_table.php:26` | dikomentari |
-| `end_at > start_at` | `..._attendance_sessions_table.php:29` | dikomentari |
-| `status IN (...)` | `..._attendance_records_table.php:27-30` | dikomentari |
+| Aturan                                      | Lokasi                                   | Status      |
+| ------------------------------------------- | ---------------------------------------- | ----------- |
+| `role IN ('STUDENT','TEACHER','ADMIN')`     | `..._users_table.php:26`                 | dikomentari |
+| `end_at > start_at`                         | `..._attendance_sessions_table.php:29`   | dikomentari |
+| `status IN (...)`                           | `..._attendance_records_table.php:27-30` | dikomentari |
 | `late_minutes IS NULL OR late_minutes >= 0` | `..._attendance_records_table.php:31-34` | dikomentari |
 
 ### 4.6 `academic_year` nullable pada partial unique index (risiko integritas)
@@ -290,13 +293,13 @@ baru ditambahkan, tetapi **tidak muncul** di `DATABASE.md`, `QUERY.sql`, maupun
 
 ### 4.8 Dokumentasi tidak sinkron dengan kode
 
-| Dokumen | Isi dokumen | Kenyataan kode |
-| --- | --- | --- |
-| `RANCANGAN.md` §3.2–3.4 | Seeder **gagal** (`scanned_at` NULL untuk `TIDAK_HADIR`) | Seeder **sudah diperbaiki** dan berjalan sukses |
-| `RANCANGAN.md` §2.5, §2.10, §2.11 | Kolom `latitude/longitude/radius_meters/academic_year/distance_meters/location_status` ditandai **[rencana]** | **Sudah ada** di migrasi `..._000010` |
-| `DATABASE.md` §2 | Menganggap implementasi "hanya model `User`" | Kini **10 model** + tabel `school_settings` |
-| `QUERY.sql` | DDL 10 tabel **tanpa** kolom geofencing/`academic_year`, tanpa `school_settings` | Migrasi sudah berbeda |
-| `DATABASE.md` §12 | "Perbarui `QUERY.sql`, DBML, dan `DATABASE.md` bersamaan" | Belum dilakukan |
+| Dokumen                           | Isi dokumen                                                                                                   | Kenyataan kode                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `RANCANGAN.md` §3.2–3.4           | Seeder **gagal** (`scanned_at` NULL untuk `TIDAK_HADIR`)                                                      | Seeder **sudah diperbaiki** dan berjalan sukses |
+| `RANCANGAN.md` §2.5, §2.10, §2.11 | Kolom `latitude/longitude/radius_meters/academic_year/distance_meters/location_status` ditandai **[rencana]** | **Sudah ada** di migrasi `..._000010`           |
+| `DATABASE.md` §2                  | Menganggap implementasi "hanya model `User`"                                                                  | Kini **10 model** + tabel `school_settings`     |
+| `QUERY.sql`                       | DDL 10 tabel **tanpa** kolom geofencing/`academic_year`, tanpa `school_settings`                              | Migrasi sudah berbeda                           |
+| `DATABASE.md` §12                 | "Perbarui `QUERY.sql`, DBML, dan `DATABASE.md` bersamaan"                                                     | Belum dilakukan                                 |
 
 ### 4.9 Identitas aplikasi masih milik starter kit
 
@@ -323,12 +326,12 @@ Pint gagal pada 5 berkas dan test gagal (1 failure + 16 error), sehingga CI mera
 ## 5. Kualitas Kode & Konfigurasi
 
 - **Pint gagal pada 5 berkas:**
-  - `app/Models/User.php` (baru masuk daftar),
-  - `..._create_class_students_table.php`,
-  - `..._create_teacher_assignments_table.php`,
-  - `..._add_geofencing_and_academic_year_fields.php`,
-  - `database/seeders/DatabaseSeeder.php`.
-  Perbaikan cepat: `composer lint`.
+    - `app/Models/User.php` (baru masuk daftar),
+    - `..._create_class_students_table.php`,
+    - `..._create_teacher_assignments_table.php`,
+    - `..._add_geofencing_and_academic_year_fields.php`,
+    - `database/seeders/DatabaseSeeder.php`.
+      Perbaikan cepat: `composer lint`.
 - **PHPStan** belum dapat dijalankan pada lingkungan ini (crash 128M); perlu
   `--memory-limit=1G` atau CI.
 - **`public/build/manifest.json` belum ada**, sehingga test yang merender Inertia
@@ -357,22 +360,22 @@ Pint gagal pada 5 berkas dan test gagal (1 failure + 16 error), sehingga CI mera
 
 ## 7. Daftar Kesenjangan Berprioritas
 
-| # | Prioritas | Kesenjangan | Dampak | Rujukan |
-| --- | --- | --- | --- | --- |
-| 1 | **Kritis** | Route domain tanpa `auth`/`verified` | Aplikasi dapat diakses tanpa login; test gagal | §4.1 |
-| 2 | **Kritis** | `UserFactory` tak isi `role`; cast/fillable `User` kurang | 16 test error; CI merah | §4.2 |
-| 3 | **Kritis** | Enum `UserRole`/`AttendanceStatus` & cast belum ada | Domain tak type-safe; validasi lemah | §3.2 |
-| 4 | **Tinggi** | Controller/service/route data absensi belum ada | Fitur inti tak berjalan | §3.4, §3.9 |
-| 5 | **Tinggi** | Halaman frontend masih mockup statis (kamera/lokasi/backend) | Fitur tak dapat dipakai | §3.5 |
-| 6 | **Tinggi** | Policy/middleware peran belum ada | Otorisasi belum ditegakkan | §3.3 |
-| 7 | **Sedang** | Factory & test domain belum ada | Regresi tak terdeteksi | §3.6 |
-| 8 | **Sedang** | Tabel `attendance_requests` belum ada | Alur persetujuan tanpa storage | §3.7 |
-| 9 | **Sedang** | Check constraint & enum tidak selaras migrasi↔DDL | Integritas DB lemah | §4.4–4.5 |
-| 10 | **Sedang** | `academic_year` NULL pada partial unique index | Risiko pelanggaran keanggotaan aktif | §4.6 |
-| 11 | **Sedang** | `school_settings` & geofencing tak terdokumentasi | Dokumen tak tepercaya | §4.7–4.8 |
-| 12 | **Sedang** | Pint gagal 5 berkas; PHPStan & PostgreSQL belum terverifikasi | CI merah; kualitas tak terjamin | §5 |
-| 13 | **Rendah** | Wayfinder diabaikan; tipe `User`/branding starter kit | Kerapian, konsistensi, UX | §3.5, §4.9 |
-| 14 | **Rendah** | README menjanjikan fitur yang belum ada | Ekspektasi tidak akurat | §4.10 |
+| #   | Prioritas  | Kesenjangan                                                   | Dampak                                         | Rujukan    |
+| --- | ---------- | ------------------------------------------------------------- | ---------------------------------------------- | ---------- |
+| 1   | **Kritis** | Route domain tanpa `auth`/`verified`                          | Aplikasi dapat diakses tanpa login; test gagal | §4.1       |
+| 2   | **Kritis** | `UserFactory` tak isi `role`; cast/fillable `User` kurang     | 16 test error; CI merah                        | §4.2       |
+| 3   | **Kritis** | Enum `UserRole`/`AttendanceStatus` & cast belum ada           | Domain tak type-safe; validasi lemah           | §3.2       |
+| 4   | **Tinggi** | Controller/service/route data absensi belum ada               | Fitur inti tak berjalan                        | §3.4, §3.9 |
+| 5   | **Tinggi** | Halaman frontend masih mockup statis (kamera/lokasi/backend)  | Fitur tak dapat dipakai                        | §3.5       |
+| 6   | **Tinggi** | Policy/middleware peran belum ada                             | Otorisasi belum ditegakkan                     | §3.3       |
+| 7   | **Sedang** | Factory & test domain belum ada                               | Regresi tak terdeteksi                         | §3.6       |
+| 8   | **Sedang** | Tabel `attendance_requests` belum ada                         | Alur persetujuan tanpa storage                 | §3.7       |
+| 9   | **Sedang** | Check constraint & enum tidak selaras migrasi↔DDL             | Integritas DB lemah                            | §4.4–4.5   |
+| 10  | **Sedang** | `academic_year` NULL pada partial unique index                | Risiko pelanggaran keanggotaan aktif           | §4.6       |
+| 11  | **Sedang** | `school_settings` & geofencing tak terdokumentasi             | Dokumen tak tepercaya                          | §4.7–4.8   |
+| 12  | **Sedang** | Pint gagal 5 berkas; PHPStan & PostgreSQL belum terverifikasi | CI merah; kualitas tak terjamin                | §5         |
+| 13  | **Rendah** | Wayfinder diabaikan; tipe `User`/branding starter kit         | Kerapian, konsistensi, UX                      | §3.5, §4.9 |
+| 14  | **Rendah** | README menjanjikan fitur yang belum ada                       | Ekspektasi tidak akurat                        | §4.10      |
 
 ---
 

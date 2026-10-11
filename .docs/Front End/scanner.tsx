@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, ChevronLeft, Check, MapPin } from 'lucide-react';
+import { Camera, ChevronLeft, Check } from 'lucide-react';
 
 interface AttendanceStatusProps {
     view: 'scan' | 'success' | 'failed';
@@ -8,25 +8,30 @@ interface AttendanceStatusProps {
 const AttendanceStatus: React.FC<AttendanceStatusProps> = ({ view }) => {
     if (view === 'scan') {
         return (
-            <div className="min-h-screen bg-[#4a4a4a] relative flex flex-col justify-between">
-                <div className="pt-12 px-6 flex items-center text-white gap-4">
+            <div className="relative flex min-h-screen flex-col justify-between bg-[#4a4a4a]">
+                <div className="flex items-center gap-4 px-6 pt-12 text-white">
                     <ChevronLeft size={28} />
-                    <h1 className="font-medium text-lg">Scan QR Absen</h1>
+                    <h1 className="text-lg font-medium">Scan QR Absen</h1>
                 </div>
 
                 {/* Mockup Frame QR */}
-                <div className="flex-1 flex justify-center items-center">
-                    <div className="w-64 h-64 bg-white p-2">
-                        <img src="/api/placeholder/240/240" alt="QR Frame" className="w-full h-full object-cover grayscale opacity-80" />
+                <div className="flex flex-1 items-center justify-center">
+                    <div className="h-64 w-64 bg-white p-2">
+                        <img
+                            src="/api/placeholder/240/240"
+                            alt="QR Frame"
+                            className="h-full w-full object-cover opacity-80 grayscale"
+                        />
                     </div>
                 </div>
 
-                <div className="bg-white rounded-t-3xl p-6 pb-10">
-                    <button className="w-full border border-gray-300 text-gray-600 font-semibold py-4 rounded-xl flex items-center justify-center gap-2 mb-4">
+                <div className="rounded-t-3xl bg-white p-6 pb-10">
+                    <button className="mb-4 flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 py-4 font-semibold text-gray-600">
                         <Camera size={20} /> Scan QR Absensi
                     </button>
-                    <p className="text-xs font-bold text-center text-black px-4">
-                        harap untuk lokasi diaktifkan agar bisa diakses secara real-time
+                    <p className="px-4 text-center text-xs font-bold text-black">
+                        harap untuk lokasi diaktifkan agar bisa diakses secara
+                        real-time
                     </p>
                 </div>
             </div>
@@ -36,25 +41,25 @@ const AttendanceStatus: React.FC<AttendanceStatusProps> = ({ view }) => {
     const isSuccess = view === 'success';
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center relative">
-            <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="relative flex min-h-screen flex-col items-center justify-center bg-white px-6 text-center">
+            <div className="flex flex-1 flex-col items-center justify-center">
                 {/* Ikon */}
                 {isSuccess ? (
                     <div className="mb-8 text-[#1E3A8A]">
                         <Check size={120} strokeWidth={1} />
                     </div>
                 ) : (
-                    <div className="mb-8 w-28 h-32 bg-[#1E3A8A] rounded-t-full rounded-b-full flex flex-col items-center justify-center clip-path-pin">
-                        <div className="w-4 h-12 bg-white rounded-sm mb-2"></div>
-                        <div className="w-4 h-4 bg-white rounded-sm"></div>
+                    <div className="clip-path-pin mb-8 flex h-32 w-28 flex-col items-center justify-center rounded-t-full rounded-b-full bg-[#1E3A8A]">
+                        <div className="mb-2 h-12 w-4 rounded-sm bg-white"></div>
+                        <div className="h-4 w-4 rounded-sm bg-white"></div>
                     </div>
                 )}
 
                 {/* Teks */}
-                <h1 className="text-4xl font-bold text-black tracking-tight mb-4">
+                <h1 className="mb-4 text-4xl font-bold tracking-tight text-black">
                     {isSuccess ? 'Absen Berhasil' : 'Absen Gagal'}
                 </h1>
-                <p className="text-sm font-semibold text-black px-2 mb-8">
+                <p className="mb-8 px-2 text-sm font-semibold text-black">
                     {isSuccess
                         ? 'Kehadiran Anda telah tercatat dan diverifikasi dengan GPS.'
                         : 'Anda berada di luar radius geofence yang diizinkan. Pindah ke lokasi kelas dan coba lagi.'}
@@ -62,9 +67,10 @@ const AttendanceStatus: React.FC<AttendanceStatusProps> = ({ view }) => {
 
                 {/* Kotak Peringatan (Hanya Gagal) */}
                 {!isSuccess && (
-                    <div className="border border-gray-800 rounded-xl p-4 w-full mb-8">
+                    <div className="mb-8 w-full rounded-xl border border-gray-800 p-4">
                         <p className="text-xs font-medium text-black">
-                            Percobaan absensi ini telah dicatat. Jika Anda yakin berada di lokasi yang benar, hubungi guru Anda.
+                            Percobaan absensi ini telah dicatat. Jika Anda yakin
+                            berada di lokasi yang benar, hubungi guru Anda.
                         </p>
                     </div>
                 )}
@@ -72,7 +78,7 @@ const AttendanceStatus: React.FC<AttendanceStatusProps> = ({ view }) => {
 
             {/* Tombol Bawah */}
             <div className="w-full pb-10">
-                <button className="w-full bg-[#1E3A8A] text-white font-semibold py-4 rounded-xl">
+                <button className="w-full rounded-xl bg-[#1E3A8A] py-4 font-semibold text-white">
                     Kembali ke Beranda
                 </button>
             </div>

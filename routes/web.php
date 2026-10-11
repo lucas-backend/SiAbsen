@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AcademicSearchController;
+use App\Http\Controllers\AttendanceAssignmentController;
+use App\Http\Controllers\AttendanceRequestController;
 use App\Http\Controllers\AttendanceScanController;
 use App\Http\Controllers\AttendanceSessionController;
 use App\Http\Controllers\StudentAttendanceController;
@@ -17,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('attendance/sessions', [AttendanceSessionController::class, 'index'])->name('attendance.sessions.index');
         Route::post('attendance/sessions', [AttendanceSessionController::class, 'store'])->name('attendance.sessions.store');
         Route::get('attendance/sessions/{attendanceSession}', [AttendanceSessionController::class, 'show'])->name('attendance.sessions.show');
+        Route::get('attendance/assignments', AttendanceAssignmentController::class)->name('attendance.assignments.index');
 
         Route::get('academic/search', AcademicSearchController::class)->name('academic.search');
     });
@@ -27,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('attendance/sessions/{attendanceSession}/scan', [AttendanceScanController::class, 'store'])->name('attendance.scan.store');
         Route::get('attendance/me', [StudentAttendanceController::class, 'index'])->name('attendance.me');
+        Route::post('attendance/requests', [AttendanceRequestController::class, 'store'])->name('attendance.requests.store');
     });
 });
 

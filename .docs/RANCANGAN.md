@@ -9,13 +9,13 @@ Dokumen ini merupakan acuan kerja tim Kelompok SiAbsen untuk membangun aplikasi 
 - **Nama Kelompok:** Kelompok SiAbsen
 - **Repositori Git:** <https://github.com/lucas-backend/SiAbsen>
 
-| Nama | NPM |
-| --- | --- |
+| Nama                    | NPM        |
+| ----------------------- | ---------- |
 | I Made Dipa Rama Artike | 2415061001 |
-| Rifki Yudika Perdana | 2415061090 |
-| Riffa Yudika Perdana | 2415061091 |
-| Arqan Purusa Eryan | 2415061055 |
-| Yostiar Aminudin | 2415061016 |
+| Rifki Yudika Perdana    | 2415061090 |
+| Riffa Yudika Perdana    | 2415061091 |
+| Arqan Purusa Eryan      | 2415061055 |
+| Yostiar Aminudin        | 2415061016 |
 
 ---
 
@@ -43,18 +43,18 @@ Perbedaan Siswa dan Guru terletak pada role dan tabel profil: Siswa memiliki `st
 
 ### 1.4 Peran Pengguna
 
-| Peran | Kewenangan |
-| --- | --- |
-| Guru | Generate QR code absensi, kelola data siswa/kelas/jadwal, merekap absensi, memantau status kehadiran siswa secara realtime |
-| Siswa | Melakukan absensi via scan QR code, melihat riwayat absen sendiri |
+| Peran | Kewenangan                                                                                                                 |
+| ----- | -------------------------------------------------------------------------------------------------------------------------- |
+| Guru  | Generate QR code absensi, kelola data siswa/kelas/jadwal, merekap absensi, memantau status kehadiran siswa secara realtime |
+| Siswa | Melakukan absensi via scan QR code, melihat riwayat absen sendiri                                                          |
 
 ### 1.5 Relasi Antar Entitas
 
-| Entitas A | Entitas B | Jenis Relasi | Implementasi di Repositori |
-| --- | --- | --- | --- |
-| User (Siswa) | Kelas | Many to Many | Tabel pivot `class_students` |
-| User (Guru) | Kelas | One to Many | Tabel `teacher_assignments` (per mata pelajaran) |
-| User (Siswa) | Absensi | One to Many | `attendance_records.student_id` |
+| Entitas A    | Entitas B | Jenis Relasi | Implementasi di Repositori                       |
+| ------------ | --------- | ------------ | ------------------------------------------------ |
+| User (Siswa) | Kelas     | Many to Many | Tabel pivot `class_students`                     |
+| User (Guru)  | Kelas     | One to Many  | Tabel `teacher_assignments` (per mata pelajaran) |
+| User (Siswa) | Absensi   | One to Many  | `attendance_records.student_id`                  |
 
 **Alasan desain tiap relasi:**
 
@@ -111,125 +111,125 @@ Konvensi dasar: primary key domain memakai `BIGINT` identity, waktu memakai `TIM
 
 ### 2.1 `users`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | Cukup besar untuk akun jangka panjang dan konsisten dengan tabel lain | Auto increment |
-| `name` | VARCHAR(255) | — | Tidak | Nama orang tidak butuh tipe khusus; 255 aman untuk nama panjang | Wajib diisi |
-| `email` | VARCHAR(255) | Unique | Tidak | Identitas login; panjang standar email | Harus unik, dipakai Fortify |
-| `email_verified_at` | TIMESTAMPTZ(6) | — | Ya | Waktu verifikasi membutuhkan zona waktu | — |
-| `password` | VARCHAR(255) | — | Tidak | Menyimpan hash, bukan teks asli | Selalu hash via cast `hashed` |
-| `role` | VARCHAR(20) / enum `user_role` | Index | Tidak | Nilai terbatas; migrasi memakai VARCHAR(20), DDL target memakai native enum | Index `idx_users_role`; nilai valid STUDENT/TEACHER/ADMIN |
-| `phone` | VARCHAR(30) | — | Ya | Nomor telepon fleksibel antar format | — |
-| `birth_date` | DATE | — | Ya | Hanya butuh tanggal, tanpa waktu | — |
-| `remember_token` | VARCHAR(100) | — | Ya | Token "remember me" | — |
-| `created_at` | TIMESTAMPTZ(6) | — | Tidak | Waktu dibuat dengan zona waktu | Default `CURRENT_TIMESTAMP(6)` |
-| `updated_at` | TIMESTAMPTZ(6) | — | Tidak | Waktu diubah | Dikelola Eloquent |
+| Atribut             | Tipe Data                      | Kunci  | Nullable | Alasan Pemilihan Tipe Data                                                  | Batasan Integritas                                        |
+| ------------------- | ------------------------------ | ------ | -------- | --------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `id`                | BIGINT identity                | PK     | Tidak    | Cukup besar untuk akun jangka panjang dan konsisten dengan tabel lain       | Auto increment                                            |
+| `name`              | VARCHAR(255)                   | —      | Tidak    | Nama orang tidak butuh tipe khusus; 255 aman untuk nama panjang             | Wajib diisi                                               |
+| `email`             | VARCHAR(255)                   | Unique | Tidak    | Identitas login; panjang standar email                                      | Harus unik, dipakai Fortify                               |
+| `email_verified_at` | TIMESTAMPTZ(6)                 | —      | Ya       | Waktu verifikasi membutuhkan zona waktu                                     | —                                                         |
+| `password`          | VARCHAR(255)                   | —      | Tidak    | Menyimpan hash, bukan teks asli                                             | Selalu hash via cast `hashed`                             |
+| `role`              | VARCHAR(20) / enum `user_role` | Index  | Tidak    | Nilai terbatas; migrasi memakai VARCHAR(20), DDL target memakai native enum | Index `idx_users_role`; nilai valid STUDENT/TEACHER/ADMIN |
+| `phone`             | VARCHAR(30)                    | —      | Ya       | Nomor telepon fleksibel antar format                                        | —                                                         |
+| `birth_date`        | DATE                           | —      | Ya       | Hanya butuh tanggal, tanpa waktu                                            | —                                                         |
+| `remember_token`    | VARCHAR(100)                   | —      | Ya       | Token "remember me"                                                         | —                                                         |
+| `created_at`        | TIMESTAMPTZ(6)                 | —      | Tidak    | Waktu dibuat dengan zona waktu                                              | Default `CURRENT_TIMESTAMP(6)`                            |
+| `updated_at`        | TIMESTAMPTZ(6)                 | —      | Tidak    | Waktu diubah                                                                | Dikelola Eloquent                                         |
 
 ### 2.2 `student_profiles`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `user_id` | BIGINT | PK, FK `users.id` | Tidak | Satu akun maksimal satu profil siswa | `ON DELETE CASCADE` |
-| `student_number` | VARCHAR(50) | Unique | Tidak | Nomor induk siswa bisa mengandung huruf/angka | Unik |
-| `education_level_id` | BIGINT | FK `education_levels.id` | Tidak | Menandai jenjang siswa | `ON DELETE RESTRICT` |
+| Atribut              | Tipe Data   | Kunci                    | Nullable | Alasan Pemilihan Tipe Data                    | Batasan Integritas   |
+| -------------------- | ----------- | ------------------------ | -------- | --------------------------------------------- | -------------------- |
+| `user_id`            | BIGINT      | PK, FK `users.id`        | Tidak    | Satu akun maksimal satu profil siswa          | `ON DELETE CASCADE`  |
+| `student_number`     | VARCHAR(50) | Unique                   | Tidak    | Nomor induk siswa bisa mengandung huruf/angka | Unik                 |
+| `education_level_id` | BIGINT      | FK `education_levels.id` | Tidak    | Menandai jenjang siswa                        | `ON DELETE RESTRICT` |
 
 ### 2.3 `teacher_profiles`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `user_id` | BIGINT | PK, FK `users.id` | Tidak | Menandai akun berperan guru | `ON DELETE CASCADE` |
+| Atribut   | Tipe Data | Kunci             | Nullable | Alasan Pemilihan Tipe Data  | Batasan Integritas  |
+| --------- | --------- | ----------------- | -------- | --------------------------- | ------------------- |
+| `user_id` | BIGINT    | PK, FK `users.id` | Tidak    | Menandai akun berperan guru | `ON DELETE CASCADE` |
 
 ### 2.4 `education_levels`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | — | Auto increment |
-| `name` | VARCHAR(100) | Unique | Tidak | Nama jenjang (SD/SMP/SMA) | Unik |
+| Atribut | Tipe Data       | Kunci  | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
+| ------- | --------------- | ------ | -------- | -------------------------- | ------------------ |
+| `id`    | BIGINT identity | PK     | Tidak    | —                          | Auto increment     |
+| `name`  | VARCHAR(100)    | Unique | Tidak    | Nama jenjang (SD/SMP/SMA)  | Unik               |
 
 ### 2.5 `classes`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | — | Auto increment |
-| `name` | VARCHAR(100) | — | Tidak | Nama kelas (mis. "Kelas 10 MIPA 1") | Unik per jenjang |
-| `education_level_id` | BIGINT | FK `education_levels.id` | Tidak | Kelas selalu milik satu jenjang | `ON DELETE RESTRICT`; bagian unique (`education_level_id`, `name`) |
-| `latitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Presisi 7 desimal setara akurasi GPS; titik pusat geofence kelas | — |
-| `longitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Sama seperti latitude | — |
-| `radius_meters` | INTEGER | — | Ya | **[rencana]** Radius toleransi geofence dalam meter | Default nilai aman (mis. 50); tidak negatif |
+| Atribut              | Tipe Data       | Kunci                    | Nullable | Alasan Pemilihan Tipe Data                                                     | Batasan Integritas                                                 |
+| -------------------- | --------------- | ------------------------ | -------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `id`                 | BIGINT identity | PK                       | Tidak    | —                                                                              | Auto increment                                                     |
+| `name`               | VARCHAR(100)    | —                        | Tidak    | Nama kelas (mis. "Kelas 10 MIPA 1")                                            | Unik per jenjang                                                   |
+| `education_level_id` | BIGINT          | FK `education_levels.id` | Tidak    | Kelas selalu milik satu jenjang                                                | `ON DELETE RESTRICT`; bagian unique (`education_level_id`, `name`) |
+| `latitude`           | NUMERIC(10,7)   | —                        | Ya       | **[rencana]** Presisi 7 desimal setara akurasi GPS; titik pusat geofence kelas | —                                                                  |
+| `longitude`          | NUMERIC(10,7)   | —                        | Ya       | **[rencana]** Sama seperti latitude                                            | —                                                                  |
+| `radius_meters`      | INTEGER         | —                        | Ya       | **[rencana]** Radius toleransi geofence dalam meter                            | Default nilai aman (mis. 50); tidak negatif                        |
 
 ### 2.6 `subjects`
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | — | Auto increment |
-| `name` | VARCHAR(150) | Unique | Tidak | Nama mata pelajaran | Unik |
+| Atribut | Tipe Data       | Kunci  | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
+| ------- | --------------- | ------ | -------- | -------------------------- | ------------------ |
+| `id`    | BIGINT identity | PK     | Tidak    | —                          | Auto increment     |
+| `name`  | VARCHAR(150)    | Unique | Tidak    | Nama mata pelajaran        | Unik               |
 
 ### 2.7 `class_students` (pivot Siswa–Kelas)
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | Memudahkan referensi pivot | Auto increment |
-| `class_id` | BIGINT | FK `classes.id` | Tidak | Kelas penempatan | `ON DELETE RESTRICT` |
-| `student_id` | BIGINT | FK `users.id` | Tidak | Siswa yang ditempatkan | `ON DELETE RESTRICT` |
-| `is_active` | BOOLEAN | — | Tidak | Menandai penempatan aktif vs historis | Default `TRUE`; partial unique `(student_id) WHERE is_active` |
-| `academic_year` | VARCHAR(9) | — | Ya | **[rencana]** Menandai tahun ajaran (mis. "2026/2027") agar riwayat antar tahun jelas | Bila diaktifkan, masukkan ke dalam unique keaktifan |
+| Atribut         | Tipe Data       | Kunci           | Nullable | Alasan Pemilihan Tipe Data                                                            | Batasan Integritas                                            |
+| --------------- | --------------- | --------------- | -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `id`            | BIGINT identity | PK              | Tidak    | Memudahkan referensi pivot                                                            | Auto increment                                                |
+| `class_id`      | BIGINT          | FK `classes.id` | Tidak    | Kelas penempatan                                                                      | `ON DELETE RESTRICT`                                          |
+| `student_id`    | BIGINT          | FK `users.id`   | Tidak    | Siswa yang ditempatkan                                                                | `ON DELETE RESTRICT`                                          |
+| `is_active`     | BOOLEAN         | —               | Tidak    | Menandai penempatan aktif vs historis                                                 | Default `TRUE`; partial unique `(student_id) WHERE is_active` |
+| `academic_year` | VARCHAR(9)      | —               | Ya       | **[rencana]** Menandai tahun ajaran (mis. "2026/2027") agar riwayat antar tahun jelas | Bila diaktifkan, masukkan ke dalam unique keaktifan           |
 
 ### 2.8 `teacher_assignments` (pivot Guru–Kelas–Mata Pelajaran)
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | Dirujuk sesi absensi | Auto increment; unique `(id, class_id)` untuk FK komposit |
-| `teacher_id` | BIGINT | FK `users.id` | Tidak | Guru pengampu | `ON DELETE RESTRICT` |
-| `class_id` | BIGINT | FK `classes.id` | Tidak | Kelas yang diampu | `ON DELETE RESTRICT` |
-| `subject_id` | BIGINT | FK `subjects.id` | Tidak | Mata pelajaran yang diampu | `ON DELETE RESTRICT` |
-| `is_active` | BOOLEAN | — | Tidak | Penugasan aktif vs historis | Default `TRUE`; partial unique `(teacher_id, class_id, subject_id) WHERE is_active` |
+| Atribut      | Tipe Data       | Kunci            | Nullable | Alasan Pemilihan Tipe Data  | Batasan Integritas                                                                  |
+| ------------ | --------------- | ---------------- | -------- | --------------------------- | ----------------------------------------------------------------------------------- |
+| `id`         | BIGINT identity | PK               | Tidak    | Dirujuk sesi absensi        | Auto increment; unique `(id, class_id)` untuk FK komposit                           |
+| `teacher_id` | BIGINT          | FK `users.id`    | Tidak    | Guru pengampu               | `ON DELETE RESTRICT`                                                                |
+| `class_id`   | BIGINT          | FK `classes.id`  | Tidak    | Kelas yang diampu           | `ON DELETE RESTRICT`                                                                |
+| `subject_id` | BIGINT          | FK `subjects.id` | Tidak    | Mata pelajaran yang diampu  | `ON DELETE RESTRICT`                                                                |
+| `is_active`  | BOOLEAN         | —                | Tidak    | Penugasan aktif vs historis | Default `TRUE`; partial unique `(teacher_id, class_id, subject_id) WHERE is_active` |
 
 ### 2.9 Tabel Pendukung Alur Persetujuan — `attendance_requests` **[rencana]**
 
 Belum ada di repositori. Diusulkan agar alur persetujuan pada 1.6.1 memiliki tempat penyimpanan.
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | — | Auto increment |
-| `session_id` | BIGINT | FK `attendance_sessions.id` | Tidak | Sesi yang dikoreksi | `ON DELETE CASCADE` |
-| `student_id` | BIGINT | FK `users.id` | Tidak | Siswa pengaju | `ON DELETE CASCADE` |
-| `requested_status` | VARCHAR(20) | — | Tidak | Status yang diajukan (mis. `IZIN`, `SAKIT`) | Nilai terbatas |
-| `reason` | TEXT | — | Ya | Alasan pengajuan | — |
-| `status` | VARCHAR(20) | — | Tidak | `PENDING`/`APPROVED`/`REJECTED` | Default `PENDING` |
-| `reviewed_by` | BIGINT | FK `users.id` | Ya | Guru/admin peninjau | `ON DELETE SET NULL` |
-| `reviewed_at` | TIMESTAMPTZ(6) | — | Ya | Waktu keputusan | — |
+| Atribut            | Tipe Data       | Kunci                       | Nullable | Alasan Pemilihan Tipe Data                  | Batasan Integritas   |
+| ------------------ | --------------- | --------------------------- | -------- | ------------------------------------------- | -------------------- |
+| `id`               | BIGINT identity | PK                          | Tidak    | —                                           | Auto increment       |
+| `session_id`       | BIGINT          | FK `attendance_sessions.id` | Tidak    | Sesi yang dikoreksi                         | `ON DELETE CASCADE`  |
+| `student_id`       | BIGINT          | FK `users.id`               | Tidak    | Siswa pengaju                               | `ON DELETE CASCADE`  |
+| `requested_status` | VARCHAR(20)     | —                           | Tidak    | Status yang diajukan (mis. `IZIN`, `SAKIT`) | Nilai terbatas       |
+| `reason`           | TEXT            | —                           | Ya       | Alasan pengajuan                            | —                    |
+| `status`           | VARCHAR(20)     | —                           | Tidak    | `PENDING`/`APPROVED`/`REJECTED`             | Default `PENDING`    |
+| `reviewed_by`      | BIGINT          | FK `users.id`               | Ya       | Guru/admin peninjau                         | `ON DELETE SET NULL` |
+| `reviewed_at`      | TIMESTAMPTZ(6)  | —                           | Ya       | Waktu keputusan                             | —                    |
 
 ### 2.10 `attendance_sessions` (Sesi Absensi)
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | Dirujuk record absensi | Auto increment |
-| `assignment_id` | BIGINT | FK komposit | Tidak | Menentukan guru, kelas, mapel sesi | FK `(assignment_id, class_id)` → `teacher_assignments (id, class_id)` |
-| `class_id` | BIGINT | FK `classes.id` | Tidak | Kelas sesi | `ON DELETE RESTRICT`; selalu konsisten dengan assignment |
-| `session_date` | DATE | — | Tidak | Tanggal kalender sesi (timezone sekolah), tanpa jam | Bagian unique `(assignment_id, session_date, start_at, end_at)` |
-| `start_at` | TIMESTAMPTZ(6) | — | Tidak | Instan mulai sesi | Harus lebih awal dari `end_at`; bagian unique |
-| `end_at` | TIMESTAMPTZ(6) | — | Tidak | Instan selesai sesi | Harus lebih besar dari `start_at` |
-| `qr_payload` | VARCHAR(255) | Unique | Tidak | Token payload QR sesi | Unik |
-| `created_by` | BIGINT | FK `users.id` | Tidak | Guru pembuat sesi | `ON DELETE RESTRICT` |
-| `latitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Pusat lokasi yang diharapkan saat sesi dibuat | — |
-| `longitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Sama seperti latitude | — |
+| Atribut         | Tipe Data       | Kunci           | Nullable | Alasan Pemilihan Tipe Data                                  | Batasan Integritas                                                    |
+| --------------- | --------------- | --------------- | -------- | ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| `id`            | BIGINT identity | PK              | Tidak    | Dirujuk record absensi                                      | Auto increment                                                        |
+| `assignment_id` | BIGINT          | FK komposit     | Tidak    | Menentukan guru, kelas, mapel sesi                          | FK `(assignment_id, class_id)` → `teacher_assignments (id, class_id)` |
+| `class_id`      | BIGINT          | FK `classes.id` | Tidak    | Kelas sesi                                                  | `ON DELETE RESTRICT`; selalu konsisten dengan assignment              |
+| `session_date`  | DATE            | —               | Tidak    | Tanggal kalender sesi (timezone sekolah), tanpa jam         | Bagian unique `(assignment_id, session_date, start_at, end_at)`       |
+| `start_at`      | TIMESTAMPTZ(6)  | —               | Tidak    | Instan mulai sesi                                           | Harus lebih awal dari `end_at`; bagian unique                         |
+| `end_at`        | TIMESTAMPTZ(6)  | —               | Tidak    | Instan selesai sesi                                         | Harus lebih besar dari `start_at`                                     |
+| `qr_payload`    | VARCHAR(255)    | Unique          | Tidak    | Token payload QR sesi                                       | Unik                                                                  |
+| `created_by`    | BIGINT          | FK `users.id`   | Tidak    | Guru pembuat sesi                                           | `ON DELETE RESTRICT`                                                  |
+| `latitude`      | NUMERIC(10,7)   | —               | Ya       | **[rencana]** Pusat lokasi yang diharapkan saat sesi dibuat | —                                                                     |
+| `longitude`     | NUMERIC(10,7)   | —               | Ya       | **[rencana]** Sama seperti latitude                         | —                                                                     |
 
 ### 2.11 `attendance_records` (Absensi / Hasil Pemindaian)
 
-| Atribut | Tipe Data | Kunci | Nullable | Alasan Pemilihan Tipe Data | Batasan Integritas |
-| --- | --- | --- | --- | --- | --- |
-| `id` | BIGINT identity | PK | Tidak | — | Auto increment |
-| `session_id` | BIGINT | FK `attendance_sessions.id` | Tidak | Sesi yang diikuti | `ON DELETE RESTRICT`; bagian unique `(session_id, student_id)` |
-| `student_id` | BIGINT | FK `users.id` | Tidak | Siswa yang hadir | `ON DELETE RESTRICT` |
-| `scanned_at` | TIMESTAMPTZ(6) | — | Tidak | Waktu absen (dari server); butuh zona waktu | Wajib diisi; lihat catatan perbaikan Bagian 3 |
-| `status` | VARCHAR(20) / enum `attendance_status` | — | Tidak | Nilai terbatas | `HADIR`, `TERLAMBAT`, `TIDAK_HADIR` (+ `IZIN`/`SAKIT` rencana persetujuan) |
-| `late_minutes` | INTEGER | — | Ya | Selisih menit keterlambatan | Check `late_minutes IS NULL OR late_minutes >= 0` |
-| `latitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Koordinat siswa saat memindai | — |
-| `longitude` | NUMERIC(10,7) | — | Ya | **[rencana]** Koordinat siswa saat memindai | — |
-| `distance_meters` | INTEGER | — | Ya | **[rencana]** Jarak hasil hitung ke pusat lokasi kelas | Tidak negatif |
-| `location_status` | VARCHAR(20) | — | Ya | **[rencana]** `SESUAI` / `DI_LUAR_RADIUS` / `TIDAK_TERVERIFIKASI` | Nilai terbatas |
-| `created_at` | TIMESTAMPTZ(6) | — | Tidak | — | Default `CURRENT_TIMESTAMP(6)` |
-| `updated_at` | TIMESTAMPTZ(6) | — | Tidak | — | Dikelola Eloquent |
+| Atribut           | Tipe Data                              | Kunci                       | Nullable | Alasan Pemilihan Tipe Data                                        | Batasan Integritas                                                         |
+| ----------------- | -------------------------------------- | --------------------------- | -------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `id`              | BIGINT identity                        | PK                          | Tidak    | —                                                                 | Auto increment                                                             |
+| `session_id`      | BIGINT                                 | FK `attendance_sessions.id` | Tidak    | Sesi yang diikuti                                                 | `ON DELETE RESTRICT`; bagian unique `(session_id, student_id)`             |
+| `student_id`      | BIGINT                                 | FK `users.id`               | Tidak    | Siswa yang hadir                                                  | `ON DELETE RESTRICT`                                                       |
+| `scanned_at`      | TIMESTAMPTZ(6)                         | —                           | Tidak    | Waktu absen (dari server); butuh zona waktu                       | Wajib diisi; lihat catatan perbaikan Bagian 3                              |
+| `status`          | VARCHAR(20) / enum `attendance_status` | —                           | Tidak    | Nilai terbatas                                                    | `HADIR`, `TERLAMBAT`, `TIDAK_HADIR` (+ `IZIN`/`SAKIT` rencana persetujuan) |
+| `late_minutes`    | INTEGER                                | —                           | Ya       | Selisih menit keterlambatan                                       | Check `late_minutes IS NULL OR late_minutes >= 0`                          |
+| `latitude`        | NUMERIC(10,7)                          | —                           | Ya       | **[rencana]** Koordinat siswa saat memindai                       | —                                                                          |
+| `longitude`       | NUMERIC(10,7)                          | —                           | Ya       | **[rencana]** Koordinat siswa saat memindai                       | —                                                                          |
+| `distance_meters` | INTEGER                                | —                           | Ya       | **[rencana]** Jarak hasil hitung ke pusat lokasi kelas            | Tidak negatif                                                              |
+| `location_status` | VARCHAR(20)                            | —                           | Ya       | **[rencana]** `SESUAI` / `DI_LUAR_RADIUS` / `TIDAK_TERVERIFIKASI` | Nilai terbatas                                                             |
+| `created_at`      | TIMESTAMPTZ(6)                         | —                           | Tidak    | —                                                                 | Default `CURRENT_TIMESTAMP(6)`                                             |
+| `updated_at`      | TIMESTAMPTZ(6)                         | —                           | Tidak    | —                                                                 | Dikelola Eloquent                                                          |
 
 ### 2.12 Diagram ERD
 
@@ -389,34 +389,34 @@ Kesalahan ini bersifat lintas-database: PostgreSQL juga akan menolak `NULL` pada
 
 Bila seeder diperbaiki, `DatabaseSeeder` sudah menghasilkan data yang memadai untuk demo:
 
-| Data | Jumlah | Sumber |
-| --- | --- | --- |
-| Jenjang pendidikan | 3 (SD, SMP, SMA) | `DatabaseSeeder` |
-| Kelas | 12 (4 per jenjang) | `DatabaseSeeder` |
-| Mata pelajaran | 8 | `DatabaseSeeder` |
-| Admin | 1 (`admin@siabsen.com`) | `DatabaseSeeder` |
-| Guru | 10 (`guru1`–`guru10`) | `DatabaseSeeder` |
-| Siswa | 120 (10 per kelas) | `DatabaseSeeder` |
-| Profil guru / siswa | 10 / 120 | `DatabaseSeeder` |
-| Penempatan kelas aktif | 120 | `class_students` |
-| Penugasan guru | 24 (2 per kelas) | `teacher_assignments` |
-| Sesi absensi | 120 (5 per penugasan) | `attendance_sessions` |
-| Riwayat absensi | ~1.200 (10 siswa × 5 sesi × 2 penugasan × 12 kelas) | `attendance_records` |
+| Data                   | Jumlah                                              | Sumber                |
+| ---------------------- | --------------------------------------------------- | --------------------- |
+| Jenjang pendidikan     | 3 (SD, SMP, SMA)                                    | `DatabaseSeeder`      |
+| Kelas                  | 12 (4 per jenjang)                                  | `DatabaseSeeder`      |
+| Mata pelajaran         | 8                                                   | `DatabaseSeeder`      |
+| Admin                  | 1 (`admin@siabsen.com`)                             | `DatabaseSeeder`      |
+| Guru                   | 10 (`guru1`–`guru10`)                               | `DatabaseSeeder`      |
+| Siswa                  | 120 (10 per kelas)                                  | `DatabaseSeeder`      |
+| Profil guru / siswa    | 10 / 120                                            | `DatabaseSeeder`      |
+| Penempatan kelas aktif | 120                                                 | `class_students`      |
+| Penugasan guru         | 24 (2 per kelas)                                    | `teacher_assignments` |
+| Sesi absensi           | 120 (5 per penugasan)                               | `attendance_sessions` |
+| Riwayat absensi        | ~1.200 (10 siswa × 5 sesi × 2 penugasan × 12 kelas) | `attendance_records`  |
 
 Seluruh akun memakai password `password`. Jumlah ini cukup untuk mendemokan pencarian bertingkat, sesi absensi, dan rekap multi-hari (sesi tersebar 1–30 hari ke belakang).
 
 ### 3.4 Catatan Perbaikan (Ketidaksesuaian Seeder vs Rancangan Bagian 2)
 
-| # | Temuan | Dampak | Usulan Perbaikan |
-| --- | --- | --- | --- |
-| 1 | `seeder` mengisi `scanned_at = null` untuk `TIDAK_HADIR`, padahal kolom `NOT NULL` | `migrate:fresh --seed` gagal | Ubah `scanned_at` menjadi nullable, atau isi `scanned_at` dengan waktu sesi untuk semua status, atau jangan simpan `TIDAK_HADIR` di record (hitung saat baca) |
-| 2 | Seeder menyimpan `TIDAK_HADIR` langsung ke `attendance_records` | Bertentangan dengan aturan domain bahwa `TIDAK_HADIR` dihitung saat pembacaan, bukan hasil scan | Untuk demo, tambahkan penanda bahwa ini data contoh; pada service nyata, `TIDAK_HADIR` dihitung on-the-fly |
-| 3 | Tidak ada kolom lokasi verifikasi pada skema mana pun | Fitur "kecocokan lokasi" di halaman rekap tidak dapat dibangun | Tambahkan kolom lokasi/geofence pada `classes` dan `attendance_records` (Bagian 2.5 dan 2.11) |
-| 4 | Sesi dibuat dengan tanggal acak 1–30 hari tanpa pengecekan duplikat | Berpotensi melanggar unique `(assignment_id, session_date, start_at, end_at)` dan menghentikan seeder | Pastikan tanggal unik per assignment, mis. pakai indeks hari berurutan |
-| 5 | Migrasi memakai `VARCHAR(20)` untuk `role` dan `status`, sedangkan DDL target memakai native enum | Tipe dan validasi bisa berbeda antara runtime dan DDL | Samakan strategi: pakai enum PostgreSQL atau check constraint yang setara |
-| 6 | Tidak ada tabel pengajuan/persetujuan | Alur persetujuan (1.6.1) belum memiliki tempat penyimpanan | Tambahkan `attendance_requests` (Bagian 2.9) |
-| 7 | `User` belum punya cast enum `role`, relasi Eloquent, atau helper otorisasi | Registrasi/otorisasi berbasis peran belum aman | Tambahkan enum cast, relasi, dan policy saat domain diimplementasikan |
-| 8 | Check constraint `end_at > start_at` dan `late_minutes >= 0` masih dikomentari di migrasi | Aturan integritas belum ditegakkan database | Aktifkan check constraint setelah verifikasi di PostgreSQL |
+| #   | Temuan                                                                                            | Dampak                                                                                                | Usulan Perbaikan                                                                                                                                              |
+| --- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `seeder` mengisi `scanned_at = null` untuk `TIDAK_HADIR`, padahal kolom `NOT NULL`                | `migrate:fresh --seed` gagal                                                                          | Ubah `scanned_at` menjadi nullable, atau isi `scanned_at` dengan waktu sesi untuk semua status, atau jangan simpan `TIDAK_HADIR` di record (hitung saat baca) |
+| 2   | Seeder menyimpan `TIDAK_HADIR` langsung ke `attendance_records`                                   | Bertentangan dengan aturan domain bahwa `TIDAK_HADIR` dihitung saat pembacaan, bukan hasil scan       | Untuk demo, tambahkan penanda bahwa ini data contoh; pada service nyata, `TIDAK_HADIR` dihitung on-the-fly                                                    |
+| 3   | Tidak ada kolom lokasi verifikasi pada skema mana pun                                             | Fitur "kecocokan lokasi" di halaman rekap tidak dapat dibangun                                        | Tambahkan kolom lokasi/geofence pada `classes` dan `attendance_records` (Bagian 2.5 dan 2.11)                                                                 |
+| 4   | Sesi dibuat dengan tanggal acak 1–30 hari tanpa pengecekan duplikat                               | Berpotensi melanggar unique `(assignment_id, session_date, start_at, end_at)` dan menghentikan seeder | Pastikan tanggal unik per assignment, mis. pakai indeks hari berurutan                                                                                        |
+| 5   | Migrasi memakai `VARCHAR(20)` untuk `role` dan `status`, sedangkan DDL target memakai native enum | Tipe dan validasi bisa berbeda antara runtime dan DDL                                                 | Samakan strategi: pakai enum PostgreSQL atau check constraint yang setara                                                                                     |
+| 6   | Tidak ada tabel pengajuan/persetujuan                                                             | Alur persetujuan (1.6.1) belum memiliki tempat penyimpanan                                            | Tambahkan `attendance_requests` (Bagian 2.9)                                                                                                                  |
+| 7   | `User` belum punya cast enum `role`, relasi Eloquent, atau helper otorisasi                       | Registrasi/otorisasi berbasis peran belum aman                                                        | Tambahkan enum cast, relasi, dan policy saat domain diimplementasikan                                                                                         |
+| 8   | Check constraint `end_at > start_at` dan `late_minutes >= 0` masih dikomentari di migrasi         | Aturan integritas belum ditegakkan database                                                           | Aktifkan check constraint setelah verifikasi di PostgreSQL                                                                                                    |
 
 ---
 
@@ -424,23 +424,23 @@ Seluruh akun memakai password `password`. Jumlah ini cukup untuk mendemokan penc
 
 Data pembagian peran dipertahankan apa adanya. Karena beberapa anggota memegang lebih dari satu peran, peran utama tiap anggota ditandai tebal agar selaras dengan prinsip satu peran utama per orang; peran lainnya menjadi pendukung.
 
-| Peran | Anggota |
-| --- | --- |
-| Basis Data & Model | **Arqan**, **Riffa**, Dipa, Rifki |
-| Antarmuka & Komponen | **Dipa**, **Rifki**, Yostiar |
-| Autentikasi & Otorisasi | **Arqan**, Yostiar |
-| Uji Kebergunaan | **Arqan**, **Dipa**, **Riffa**, **Rifki**, **Yostiar** |
-| Dokumentasi | **Yostiar**, Rifki |
+| Peran                   | Anggota                                                |
+| ----------------------- | ------------------------------------------------------ |
+| Basis Data & Model      | **Arqan**, **Riffa**, Dipa, Rifki                      |
+| Antarmuka & Komponen    | **Dipa**, **Rifki**, Yostiar                           |
+| Autentikasi & Otorisasi | **Arqan**, Yostiar                                     |
+| Uji Kebergunaan         | **Arqan**, **Dipa**, **Riffa**, **Rifki**, **Yostiar** |
+| Dokumentasi             | **Yostiar**, Rifki                                     |
 
 **Ringkasan peran utama per anggota:**
 
-| Anggota | Peran Utama | Peran Pendukung |
-| --- | --- | --- |
-| Arqan Purusa Eryan | Basis Data & Model | Autentikasi & Otorisasi, Uji Kebergunaan |
-| I Made Dipa Rama Artike | Antarmuka & Komponen | Basis Data & Model, Uji Kebergunaan |
-| Riffa Yudika Perdana | Basis Data & Model | Uji Kebergunaan |
-| Rifki Yudika Perdana | Antarmuka & Komponen | Basis Data & Model, Dokumentasi, Uji Kebergunaan |
-| Yostiar Aminudin | Dokumentasi | Antarmuka & Komponen, Autentikasi & Otorisasi, Uji Kebergunaan |
+| Anggota                 | Peran Utama          | Peran Pendukung                                                |
+| ----------------------- | -------------------- | -------------------------------------------------------------- |
+| Arqan Purusa Eryan      | Basis Data & Model   | Autentikasi & Otorisasi, Uji Kebergunaan                       |
+| I Made Dipa Rama Artike | Antarmuka & Komponen | Basis Data & Model, Uji Kebergunaan                            |
+| Riffa Yudika Perdana    | Basis Data & Model   | Uji Kebergunaan                                                |
+| Rifki Yudika Perdana    | Antarmuka & Komponen | Basis Data & Model, Dokumentasi, Uji Kebergunaan               |
+| Yostiar Aminudin        | Dokumentasi          | Antarmuka & Komponen, Autentikasi & Otorisasi, Uji Kebergunaan |
 
 Seluruh anggota terlibat pada Uji Kebergunaan sebagai peran bersama.
 
@@ -450,13 +450,13 @@ Seluruh anggota terlibat pada Uji Kebergunaan sebagai peran bersama.
 
 Calon peserta berikut sudah menyatakan bersedia. Nama asli akan dikonfirmasi sebelum pertemuan 13.
 
-| Sebutan | Nama Asli (isi sebelum pertemuan 13) | Tanggal Konfirmasi |
-| --- | --- | --- |
-| Bapak Guru (perwakilan guru laki-laki) | `[ISI_NAMA]` | |
-| Ibu Guru (perwakilan guru perempuan) | `[ISI_NAMA]` | |
-| Perwakilan Siswa Kelas X | `[ISI_NAMA]` | |
-| Perwakilan Siswa Kelas XI | `[ISI_NAMA]` | |
-| Perwakilan Siswa Kelas XII | `[ISI_NAMA]` | |
+| Sebutan                                | Nama Asli (isi sebelum pertemuan 13) | Tanggal Konfirmasi |
+| -------------------------------------- | ------------------------------------ | ------------------ |
+| Bapak Guru (perwakilan guru laki-laki) | `[ISI_NAMA]`                         |                    |
+| Ibu Guru (perwakilan guru perempuan)   | `[ISI_NAMA]`                         |                    |
+| Perwakilan Siswa Kelas X               | `[ISI_NAMA]`                         |                    |
+| Perwakilan Siswa Kelas XI              | `[ISI_NAMA]`                         |                    |
+| Perwakilan Siswa Kelas XII             | `[ISI_NAMA]`                         |                    |
 
 Rencana pelaksanaan: guru mencoba membuat sesi absensi dan membuka halaman rekap, sedangkan siswa mencoba memindai QR dan melihat riwayat absen. Masukan dari kelima peserta menjadi bahan penyempurnaan antarmuka sebelum evaluasi akhir.
 

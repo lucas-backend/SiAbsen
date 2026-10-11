@@ -13,18 +13,18 @@ penerimaan** terukur. Setiap fase diakhiri dengan pipeline hijau
 
 ## 0. Status Progres Terkini
 
-| Fase | Status | Catatan |
-| --- | --- | --- |
-| F0 Stabilisasi & CI hijau | **Selesai** | Route terproteksi; `role` terisi; generics relasi + seeder diperbaiki; test & Pint/PHPStan hijau |
-| F1 Fondasi domain | **Sebagian (≈50%)** | 10 model sudah ada; enum/cast, relasi `belongsToMany`, factory belum |
-| F2 Otorisasi & peran | **Belum** | Belum ada policy/middleware |
-| F3 Integritas skema & migrasi | **Belum** | Check constraint & `attendance_requests` belum |
-| F4 Backend absensi | **Belum** | Route masih Inertia statis, tanpa service |
-| F5 Frontend absensi | **Sebagian (mockup)** | UI ada, belum kamera/geolocation/backend |
-| F6 Rekap & pencarian bertingkat | **Belum** | Belum ada |
-| F7 Alur persetujuan | **Belum** | Form izin masih `alert()` |
-| F8 Auth & identitas | **Belum** | Branding masih campur (EduPresence/starter kit) |
-| F9 Penutupan (PostgreSQL/Docs) | **Belum** | Dokumen tertinggal (`school_settings`) |
+| Fase                            | Status                | Catatan                                                                                          |
+| ------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------ |
+| F0 Stabilisasi & CI hijau       | **Selesai**           | Route terproteksi; `role` terisi; generics relasi + seeder diperbaiki; test & Pint/PHPStan hijau |
+| F1 Fondasi domain               | **Sebagian (≈50%)**   | 10 model sudah ada; enum/cast, relasi `belongsToMany`, factory belum                             |
+| F2 Otorisasi & peran            | **Belum**             | Belum ada policy/middleware                                                                      |
+| F3 Integritas skema & migrasi   | **Belum**             | Check constraint & `attendance_requests` belum                                                   |
+| F4 Backend absensi              | **Belum**             | Route masih Inertia statis, tanpa service                                                        |
+| F5 Frontend absensi             | **Sebagian (mockup)** | UI ada, belum kamera/geolocation/backend                                                         |
+| F6 Rekap & pencarian bertingkat | **Belum**             | Belum ada                                                                                        |
+| F7 Alur persetujuan             | **Belum**             | Form izin masih `alert()`                                                                        |
+| F8 Auth & identitas             | **Belum**             | Branding masih campur (EduPresence/starter kit)                                                  |
+| F9 Penutupan (PostgreSQL/Docs)  | **Belum**             | Dokumen tertinggal (`school_settings`)                                                           |
 
 > **Baru & kritis:** muncul **regresi keamanan** — `routes/web.php` kehilangan
 > middleware `auth`/`verified`, sehingga dashboard & halaman domain terbuka tanpa login.
@@ -48,18 +48,18 @@ penerimaan** terukur. Setiap fase diakhiri dengan pipeline hijau
 
 ## 2. Ringkasan Fase
 
-| Fase | Nama | Prioritas | Bergantung pada | Hasil utama |
-| --- | --- | --- | --- | --- |
-| **F0** | Stabilisasi, proteksi route & CI hijau | Kritis | — | Route terproteksi; test/lint hijau |
-| **F1** | Selesaikan fondasi domain | Kritis | F0 | Enum, cast, relasi, factory |
-| **F2** | Otorisasi & peran | Tinggi | F1 | Policy, middleware, gate |
-| **F3** | Integritas skema & migrasi baru | Sedang | F1 | Check constraint, enum, `attendance_requests` |
-| **F4** | Backend absensi (sesi, QR, scan, geofence) | Tinggi | F1, F2 | Controller, route data, service |
-| **F5** | Integrasi frontend absensi | Tinggi | F4 | Mockup menjadi fungsional |
-| **F6** | Rekap & pencarian bertingkat | Tinggi | F4 | Halaman rekap + filter + ekspor |
-| **F7** | Alur persetujuan izin/koreksi | Sedang | F3, F4, F6 | Pengajuan & persetujuan |
-| **F8** | Autentikasi & identitas aplikasi | Sedang | F0 | Registrasi/verifikasi, branding |
-| **F9** | Penutupan: PostgreSQL, PHPStan, dokumen | Sedang | Semua | CI penuh & dokumen akurat |
+| Fase   | Nama                                       | Prioritas | Bergantung pada | Hasil utama                                   |
+| ------ | ------------------------------------------ | --------- | --------------- | --------------------------------------------- |
+| **F0** | Stabilisasi, proteksi route & CI hijau     | Kritis    | —               | Route terproteksi; test/lint hijau            |
+| **F1** | Selesaikan fondasi domain                  | Kritis    | F0              | Enum, cast, relasi, factory                   |
+| **F2** | Otorisasi & peran                          | Tinggi    | F1              | Policy, middleware, gate                      |
+| **F3** | Integritas skema & migrasi baru            | Sedang    | F1              | Check constraint, enum, `attendance_requests` |
+| **F4** | Backend absensi (sesi, QR, scan, geofence) | Tinggi    | F1, F2          | Controller, route data, service               |
+| **F5** | Integrasi frontend absensi                 | Tinggi    | F4              | Mockup menjadi fungsional                     |
+| **F6** | Rekap & pencarian bertingkat               | Tinggi    | F4              | Halaman rekap + filter + ekspor               |
+| **F7** | Alur persetujuan izin/koreksi              | Sedang    | F3, F4, F6      | Pengajuan & persetujuan                       |
+| **F8** | Autentikasi & identitas aplikasi           | Sedang    | F0              | Registrasi/verifikasi, branding               |
+| **F9** | Penutupan: PostgreSQL, PHPStan, dokumen    | Sedang    | Semua           | CI penuh & dokumen akurat                     |
 
 ```mermaid
 graph LR
@@ -89,6 +89,7 @@ graph LR
 **Tujuan:** mengembalikan test suite, lint, **dan proteksi route** ke kondisi sehat.
 
 **Langkah:**
+
 1. **Pulihkan middleware.** Bungkus route domain dengan `middleware(['auth','verified'])`
    di `routes/web.php`; tambahkan middleware peran di F2.
 2. **Perbaiki `User`:** masukkan `role` (dan `phone`, `birth_date`) ke `Fillable`/cast;
@@ -100,11 +101,13 @@ graph LR
 5. **Pint:** jalankan `composer lint` (kini 5 berkas, termasuk `app/Models/User.php`).
 
 **Berkas:**
+
 - Ubah: `routes/web.php`, `app/Models/User.php`, `database/factories/UserFactory.php`
 - Format: `app/Models/User.php`, `..._000006_*`, `..._000007_*`, `..._000010_*`,
   `database/seeders/DatabaseSeeder.php`
 
 **Kriteria penerimaan:**
+
 - `php artisan test` **0 failure, 0 error** (skip yang disengaja boleh).
 - Tamu yang membuka `/dashboard` **dialihkan ke login** (test `DashboardTest` hijau).
 - `composer lint:check` dan `composer types:check` hijau.
@@ -119,23 +122,25 @@ graph LR
 `AttendanceSession`, `AttendanceRecord`, `SchoolSetting`).
 
 **Langkah:**
+
 1. **Enum:** buat `App\Enums\UserRole` (`Student/Teacher/Admin`) dan
    `App\Enums\AttendanceStatus` (`Hadir/Terlambat/TidakHadir` + `Izin/Sakit` untuk F7),
    lengkap `label()`.
 2. **Cast:** `User.role` → `UserRole`; `AttendanceRecord.status` → `AttendanceStatus`;
    `AttendanceSession.session_date` → `date`; koordinat → `float` (sebagian sudah ada).
 3. **Relasi yang belum:**
-   - `SchoolClass::students()` → `belongsToMany(User::class, 'class_students')` dengan
-     `wherePivot('is_active', true)` dan `withPivot(['academic_year','is_active'])` +
-     aksesoris `activeStudents()`.
-   - Scope `ClassStudent::active()`, `TeacherAssignment::active()`,
-     `AttendanceSession::onDate($date)`.
-   - Tinjau penamaan `User::classMemberships()` agar konsisten (`classStudents()`).
+    - `SchoolClass::students()` → `belongsToMany(User::class, 'class_students')` dengan
+      `wherePivot('is_active', true)` dan `withPivot(['academic_year','is_active'])` +
+      aksesoris `activeStudents()`.
+    - Scope `ClassStudent::active()`, `TeacherAssignment::active()`,
+      `AttendanceSession::onDate($date)`.
+    - Tinjau penamaan `User::classMemberships()` agar konsisten (`classStudents()`).
 4. **Factory domain:** buat factory untuk seluruh tabel domain dan sesuaikan seeder
    (opsional) untuk memakainya.
 5. **Bersihkan `SchoolSetting`:** pakai di seeder/config atau hapus bila tak dipakai.
 
 **Kriteria penerimaan:**
+
 - Test: relasi & scope mengembalikan data benar (siswa aktif per kelas, sesi per tanggal).
 - `AttendanceRecord.status` mengembalikan enum, bukan string.
 - PHPStan hijau pada model baru.
@@ -147,6 +152,7 @@ graph LR
 **Tujuan:** menegakkan hak akses berbasis peran dan relasi penugasan.
 
 **Langkah:**
+
 1. Helper `User::isAdmin()/isTeacher()/isStudent()`.
 2. Middleware `EnsureRole` (alias `role`) dan terapkan pada grup route.
 3. Policy: `AttendanceSessionPolicy`, `AttendanceRecordPolicy`,
@@ -154,6 +160,7 @@ graph LR
 4. `Gate::before` agar `ADMIN` lolos semua policy.
 
 **Kriteria penerimaan:**
+
 - Guru A tidak dapat mengelola/melihat kelas guru B (403).
 - Siswa tidak dapat mengakses rekap/kelola sesi (403).
 - Admin dapat mengakses seluruh rekap.
@@ -165,6 +172,7 @@ graph LR
 **Tujuan:** menegakkan aturan integritas database dan menyediakan storage persetujuan.
 
 **Langkah:**
+
 1. Selaraskan strategi enum (native enum PostgreSQL + `check` setara untuk SQLite).
 2. Aktifkan check constraint (`role`, `end_at > start_at`, `status`, `late_minutes >= 0`).
 3. Perbaiki `academic_year` pada partial unique index (hindari pelanggaran keanggotaan aktif).
@@ -175,6 +183,7 @@ graph LR
    (tandai status, hapus label **[rencana]** yang sudah tidak berlaku).
 
 **Kriteria penerimaan:**
+
 - `migrate:fresh --seed` sukses di SQLite **dan** PostgreSQL.
 - Pelanggaran constraint ditolak (test negatif); dua baris aktif siswa sama ditolak.
 - `QUERY.sql` berjalan via `psql --set=ON_ERROR_STOP=1` tanpa error.
@@ -186,8 +195,9 @@ graph LR
 **Tujuan:** menyediakan controller/service/route nyata (menggantikan `Route::inertia`).
 
 **Langkah:**
+
 1. **Service `AttendanceService`:** `openSession`, `scan` (jendela scan, `HADIR`/`TERLAMBAT`
-   + `late_minutes`, idempoten `firstOrCreate`), `computeAbsent` (TIDAK_HADIR read-time).
+    - `late_minutes`, idempoten `firstOrCreate`), `computeAbsent` (TIDAK_HADIR read-time).
 2. **Service `GeofenceService`:** Haversine + klasifikasi `SESUAI`/`DI_LUAR_RADIUS`/
    `TIDAK_TERVERIFIKASI` (pakai `school_settings`/`classes`).
 3. **Controller:** `AttendanceSessionController`, `AttendanceScanController`,
@@ -198,6 +208,7 @@ graph LR
    radius default, batas jendela.
 
 **Kriteria penerimaan (Feature test):**
+
 - Guru membuat sesi untuk assignment-nya; `qr_payload` unik.
 - Scan dalam jendela → `HADIR`; lewat `start_at+15m` → `TERLAMBAT`; di luar jendela ditolak.
 - Scan ganda → satu record.
@@ -213,6 +224,7 @@ graph LR
 `student/permission.tsx`, `teacher/class-view.tsx`), tetapi statis.
 
 **Langkah:**
+
 1. Tambahkan pustaka QR (`html5-qrcode`/`@zxing/browser`) ke `package.json`.
 2. **Scanner siswa:** ganti simulasi `Math.random()` dengan kamera nyata + kirim payload
    QR ke `AttendanceScanController`.
@@ -227,6 +239,7 @@ graph LR
 8. Tinjau `resources/js/app.tsx` agar halaman domain memakai shell/layout yang tepat.
 
 **Kriteria penerimaan:**
+
 - Guru membuka sesi & menampilkan QR; siswa memindai dan menerima status instan.
 - Pesan jelas saat di luar jendela atau izin kamera/lokasi gagal.
 - `npm run types:check` dan `npm run check` hijau.
@@ -238,6 +251,7 @@ graph LR
 **Tujuan:** halaman rekap (`RANCANGAN.md` §6) dan pencarian bertingkat (§1.6.1).
 
 **Langkah:**
+
 1. `ReportService`: agregasi per kelas/mapel/periode/siswa + `TIDAK_HADIR` on-the-fly.
 2. `AttendanceReportController` + filter (jenjang → kelas → mapel → periode → siswa → status).
 3. `AcademicSearchController`: kelas per jenjang, siswa aktif per kelas.
@@ -245,6 +259,7 @@ graph LR
    lokasi + tautan peta, ekspor CSV.
 
 **Kriteria penerimaan:**
+
 - Filter bertingkat benar; ringkasan konsisten dengan data mentah.
 - Ekspor CSV valid; otorisasi guru/admin diuji.
 
@@ -255,6 +270,7 @@ graph LR
 **Tujuan:** pengajuan izin/sakit oleh siswa dan persetujuan oleh guru/admin.
 
 **Langkah:**
+
 1. Model `AttendanceRequest` + enum status (`PENDING/APPROVED/REJECTED`).
 2. `AttendanceRequestController` (store siswa, index/review guru).
 3. Saat `APPROVED`, tulis/perbarui `attendance_records` (`IZIN`/`SAKIT`) + audit
@@ -262,6 +278,7 @@ graph LR
 4. Halaman pengajuan (siswa) & tinjauan (guru); integrasikan dengan form izin F5.
 
 **Kriteria penerimaan:**
+
 - Pengajuan tersimpan `PENDING`; persetujuan mengubah status + mencatat peninjau.
 - Siswa tak dapat menyetujui pengajuannya sendiri.
 
@@ -272,6 +289,7 @@ graph LR
 **Tujuan:** melengkapi akun dan menyatukan merek.
 
 **Langkah:**
+
 1. Aktifkan fitur Fortify sesuai kebijakan (`registration`, `emailVerification`,
    `resetPasswords`); selaraskan middleware `verified`.
 2. **Unifikasi merek:** ganti "EduPresence" di halaman mockup menjadi "SiAbsen";
@@ -281,6 +299,7 @@ graph LR
 4. Perbarui `README.md` agar akurat.
 
 **Kriteria penerimaan:**
+
 - Nama "SiAbsen" konsisten di UI, `.env`, dan metadata.
 - Tipe `User` frontend selaras payload Inertia; navigasi memakai `role` bertipe.
 - README tidak menjanjikan fitur yang belum ada.
@@ -290,6 +309,7 @@ graph LR
 ### F9 — Penutupan: PostgreSQL, PHPStan, Sinkronisasi Dokumen (Sedang)
 
 **Langkah:**
+
 1. Aktifkan `pdo_pgsql`; jalankan `migrate:fresh --seed` di PostgreSQL; uji
    constraint/index/FK. Tambahkan job CI PostgreSQL.
 2. `phpstan analyse --memory-limit=1G`; perbaiki temuan level 7.
@@ -298,6 +318,7 @@ graph LR
 4. Pastikan `composer ci:check` hijau end-to-end.
 
 **Kriteria penerimaan:**
+
 - CI SQLite + PostgreSQL hijau; PHPStan level 7 bersih; dokumen akurat.
 
 ---
@@ -305,6 +326,7 @@ graph LR
 ## 4. Peta Berkas (Ringkas)
 
 **Sudah ada — perlu ditinjau/dilengkapi:**
+
 ```
 app/Models/{EducationLevel,SchoolClass,Subject,StudentProfile,TeacherProfile,
            ClassStudent,TeacherAssignment,AttendanceSession,AttendanceRecord,
@@ -319,6 +341,7 @@ routes/web.php                              # pulihkan middleware
 ```
 
 **Dibuat:**
+
 ```
 app/Enums/{UserRole,AttendanceStatus,AttendanceRequestStatus}.php
 app/Policies/{AttendanceSessionPolicy,AttendanceRecordPolicy,
@@ -342,6 +365,7 @@ tests/Feature/Authorization/*.php
 ```
 
 **Diubah (lain-lain):**
+
 ```
 config/fortify.php
 resources/js/app.tsx
@@ -368,6 +392,7 @@ Setiap fase dianggap **selesai** bila:
 6. **Dokumen:** perubahan skema disertai pembaruan `.docs/*`.
 
 **Perintah verifikasi cepat:**
+
 ```bash
 composer lint:check
 composer types:check
@@ -381,17 +406,17 @@ composer ci:check
 
 ## 6. Risiko & Mitigasi
 
-| Risiko | Dampak | Mitigasi |
-| --- | --- | --- |
-| Route domain tanpa proteksi (regresi) | Data bocor; akses anonim | Perbaiki di F0 sebelum fitur lain |
-| `pdo_pgsql` tidak aktif | DDL/constraint PostgreSQL tak teruji | Docker/service Postgres di CI (F9) |
-| Perbedaan enum PostgreSQL vs SQLite | Lulus di test, gagal di prod | Abstraksi enum + integration test. |
-| Partial unique index + `academic_year` NULL | Pelanggaran keanggotaan aktif | Perbaiki di F3 |
-| Kamera & geolocation butuh HTTPS | Scanner gagal di lokal | Akses via host/HTTPS; fallback input manual |
-| `F4` besar & sulit ditinjau | PR besar | Pecah: service → controller → UI |
-| Akurasi GPS dalam ruangan | False `DI_LUAR_RADIUS` | Konfigurasi radius + `TIDAK_TERVERIFIKASI` |
-| Keamanan QR (screenshot/titip absen) | Kecurangan | TTL QR, rotasi payload, verifikasi lokasi & sesi |
-| Merek campur (EduPresence vs SiAbsen) | UI tidak konsisten | Unifikasi di F8 |
+| Risiko                                      | Dampak                               | Mitigasi                                         |
+| ------------------------------------------- | ------------------------------------ | ------------------------------------------------ |
+| Route domain tanpa proteksi (regresi)       | Data bocor; akses anonim             | Perbaiki di F0 sebelum fitur lain                |
+| `pdo_pgsql` tidak aktif                     | DDL/constraint PostgreSQL tak teruji | Docker/service Postgres di CI (F9)               |
+| Perbedaan enum PostgreSQL vs SQLite         | Lulus di test, gagal di prod         | Abstraksi enum + integration test.               |
+| Partial unique index + `academic_year` NULL | Pelanggaran keanggotaan aktif        | Perbaiki di F3                                   |
+| Kamera & geolocation butuh HTTPS            | Scanner gagal di lokal               | Akses via host/HTTPS; fallback input manual      |
+| `F4` besar & sulit ditinjau                 | PR besar                             | Pecah: service → controller → UI                 |
+| Akurasi GPS dalam ruangan                   | False `DI_LUAR_RADIUS`               | Konfigurasi radius + `TIDAK_TERVERIFIKASI`       |
+| Keamanan QR (screenshot/titip absen)        | Kecurangan                           | TTL QR, rotasi payload, verifikasi lokasi & sesi |
+| Merek campur (EduPresence vs SiAbsen)       | UI tidak konsisten                   | Unifikasi di F8                                  |
 
 ---
 

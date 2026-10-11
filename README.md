@@ -135,29 +135,29 @@ Buka `http://localhost:8000` di browser.
 
 Semua akun memakai password `password`.
 
-| Peran  | Email                                                             |
-| ------ | ----------------------------------------------------------------- |
-| Admin  | `admin@siabsen.com`                                               |
-| Guru   | `guru1@siabsen.com` s/d `guru10@siabsen.com`                      |
-| Siswa  | `siswa1@siabsen.com` s/d `siswa120@siabsen.com`                   |
+| Peran | Email                                           |
+| ----- | ----------------------------------------------- |
+| Admin | `admin@siabsen.com`                             |
+| Guru  | `guru1@siabsen.com` s/d `guru10@siabsen.com`    |
+| Siswa | `siswa1@siabsen.com` s/d `siswa120@siabsen.com` |
 
 ## Perintah umum
 
-| Perintah                | Keterangan                                        |
-| ----------------------- | ------------------------------------------------- |
-| `composer dev`          | Menjalankan seluruh service pengembangan           |
-| `npm run dev`           | Vite dev server (hot reload)                       |
-| `npm run build`         | Build aset produksi                                |
-| `npm run build:ssr`     | Build aset termasuk SSR                            |
-| `php artisan test`      | Menjalankan test Pest/PHPUnit                      |
-| `composer test`         | Lint check, PHPStan, lalu test                     |
-| `composer lint`         | Auto-format backend dengan Pint                   |
-| `composer lint:check`   | Cek format backend tanpa mengubah file            |
-| `composer types:check`  | Analisis statis PHP dengan PHPStan                 |
-| `npm run check`         | Lint & format frontend (`vp check`)                |
-| `npm run check:fix`     | Perbaiki lint & format frontend                    |
-| `npm run types:check`   | Type-check TypeScript (`tsc --noEmit`)             |
-| `composer ci:check`     | Rangkaian pemeriksaan CI (check, types, test)      |
+| Perintah               | Keterangan                                    |
+| ---------------------- | --------------------------------------------- |
+| `composer dev`         | Menjalankan seluruh service pengembangan      |
+| `npm run dev`          | Vite dev server (hot reload)                  |
+| `npm run build`        | Build aset produksi                           |
+| `npm run build:ssr`    | Build aset termasuk SSR                       |
+| `php artisan test`     | Menjalankan test Pest/PHPUnit                 |
+| `composer test`        | Lint check, PHPStan, lalu test                |
+| `composer lint`        | Auto-format backend dengan Pint               |
+| `composer lint:check`  | Cek format backend tanpa mengubah file        |
+| `composer types:check` | Analisis statis PHP dengan PHPStan            |
+| `npm run check`        | Lint & format frontend (`vp check`)           |
+| `npm run check:fix`    | Perbaiki lint & format frontend               |
+| `npm run types:check`  | Type-check TypeScript (`tsc --noEmit`)        |
+| `composer ci:check`    | Rangkaian pemeriksaan CI (check, types, test) |
 
 ## Alternatif SQLite
 

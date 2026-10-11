@@ -24,18 +24,18 @@ Temuan paling kritis: **seluruh test bawaan gagal** karena `UserFactory` belum
 mengisi kolom `users.role` yang `NOT NULL`. Ini menandakan perubahan skema domain
 (tambah `role`) belum diikuti perubahan model/factory.
 
-| Aspek | Status |
-| --- | --- |
-| Migrasi database (10 tabel + geofencing) | Baik, berjalan |
-| Seeder data contoh | Baik, berjalan (1.013 record absensi) |
-| Model Eloquent domain | **Belum ada** (hanya `User`) |
-| Controller / Route domain | **Belum ada** |
-| Halaman frontend domain (scan, rekap, cari) | **Belum ada** |
-| Enum/cast & relasi Eloquent | **Belum ada** |
-| Test domain | **Belum ada** |
-| Test bawaan (`php artisan test`) | **Gagal** (16 error `users.role`) |
-| Lint backend (`pint --test`) | **Gagal** (4 berkas) |
-| Sinkronisasi dokumen vs kode | **Tidak sinkron** |
+| Aspek                                       | Status                                |
+| ------------------------------------------- | ------------------------------------- |
+| Migrasi database (10 tabel + geofencing)    | Baik, berjalan                        |
+| Seeder data contoh                          | Baik, berjalan (1.013 record absensi) |
+| Model Eloquent domain                       | **Belum ada** (hanya `User`)          |
+| Controller / Route domain                   | **Belum ada**                         |
+| Halaman frontend domain (scan, rekap, cari) | **Belum ada**                         |
+| Enum/cast & relasi Eloquent                 | **Belum ada**                         |
+| Test domain                                 | **Belum ada**                         |
+| Test bawaan (`php artisan test`)            | **Gagal** (16 error `users.role`)     |
+| Lint backend (`pint --test`)                | **Gagal** (4 berkas)                  |
+| Sinkronisasi dokumen vs kode                | **Tidak sinkron**                     |
 
 ---
 
@@ -44,15 +44,15 @@ mengisi kolom `users.role` yang `NOT NULL`. Ini menandakan perubahan skema domai
 Pemeriksaan dilakukan dengan membaca langsung kode dan menjalankan tool yang
 tersedia. Perintah yang dijalankan dan hasilnya:
 
-| Perintah | Hasil |
-| --- | --- |
-| `composer install` | Sukses (101 paket) |
-| `php artisan test` (tanpa `.env`) | 24 test, 1 lulus, 20 error (kunci enkripsi kosong) |
-| `php artisan test` (setelah `key:generate`) | 24 test, **16 error `NOT NULL constraint failed: users.role`** |
-| `php artisan migrate:fresh --seed` (SQLite) | **Sukses**, 12 migrasi + seed |
-| Hitung tabel via tinker | users=131, levels=3, classes=12, subjects=8, assignments=24, sessions=120, **records=1.013** |
-| `./vendor/bin/pint --test` | **Gagal**, 4 berkas perlu diformat |
-| `./vendor/bin/phpstan analyse` | Gagal karena masalah lingkungan (DLL turbo-ext PHP 8.5), bukan kode |
+| Perintah                                    | Hasil                                                                                        |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `composer install`                          | Sukses (101 paket)                                                                           |
+| `php artisan test` (tanpa `.env`)           | 24 test, 1 lulus, 20 error (kunci enkripsi kosong)                                           |
+| `php artisan test` (setelah `key:generate`) | 24 test, **16 error `NOT NULL constraint failed: users.role`**                               |
+| `php artisan migrate:fresh --seed` (SQLite) | **Sukses**, 12 migrasi + seed                                                                |
+| Hitung tabel via tinker                     | users=131, levels=3, classes=12, subjects=8, assignments=24, sessions=120, **records=1.013** |
+| `./vendor/bin/pint --test`                  | **Gagal**, 4 berkas perlu diformat                                                           |
+| `./vendor/bin/phpstan analyse`              | Gagal karena masalah lingkungan (DLL turbo-ext PHP 8.5), bukan kode                          |
 
 > Catatan: `pdo_pgsql` belum aktif di lingkungan tinjauan, sehingga verifikasi
 > PostgreSQL tidak dapat dijalankan (sesuai catatan lingkungan di `RANCANGAN.md`).
@@ -153,12 +153,12 @@ dan tidak ada check/constraint yang menegakkan nilai sah.
 
 Aturan integritas yang menjadi kontrak dokumen belum ditegakkan database:
 
-| Aturan | Lokasi | Status |
-| --- | --- | --- |
-| `role IN ('STUDENT','TEACHER','ADMIN')` | `...users_table.php:26` | dikomentari |
-| `end_at > start_at` | `...attendance_sessions_table.php:29` | dikomentari |
-| `status IN (...)` | `...attendance_records_table.php:27-30` | dikomentari |
-| `late_minutes >= 0` | `...attendance_records_table.php:31-34` | dikomentari |
+| Aturan                                  | Lokasi                                  | Status      |
+| --------------------------------------- | --------------------------------------- | ----------- |
+| `role IN ('STUDENT','TEACHER','ADMIN')` | `...users_table.php:26`                 | dikomentari |
+| `end_at > start_at`                     | `...attendance_sessions_table.php:29`   | dikomentari |
+| `status IN (...)`                       | `...attendance_records_table.php:27-30` | dikomentari |
+| `late_minutes >= 0`                     | `...attendance_records_table.php:31-34` | dikomentari |
 
 `DATABASE.md` bagian 8 dan `RANCANGAN.md` catatan #8 menargetkan constraint ini aktif.
 
@@ -179,13 +179,13 @@ laten (belum terlihat) tetapi nyata.
 
 ### 4.5 Dokumentasi tidak sinkron dengan kode
 
-| Dokumen | Isi dokumen | Kenyataan kode |
-| --- | --- | --- |
-| `RANCANGAN.md` bagian 3.2 | Seeder **gagal** (`scanned_at` NULL untuk `TIDAK_HADIR`) | Seeder **sudah diperbaiki** (`continue` untuk `TIDAK_HADIR`) dan **berjalan sukses** (1.013 record) |
-| `RANCANGAN.md` bagian 2.5, 2.10, 2.11 | Kolom `latitude/longitude/radius_meters/academic_year/distance_meters/location_status` ditandai **[rencana]** | **Sudah ada** di migrasi `...000010...` |
-| `DATABASE.md` bagian 2 | Menganggap status implementasi "hanya model `User`" | Benar untuk model, tetapi mengabaikan kolom geofencing yang sudah ditambahkan |
-| `QUERY.sql` | DDL 10 tabel tanpa kolom geofencing | Migrasi **sudah punya** kolom geofencing → `QUERY.sql` bukan lagi representasi skema aktual |
-| `DATABASE.md` bagian 12 | "Perbarui `QUERY.sql`, DBML, dan `DATABASE.md` bersamaan" | Belum dilakukan setelah migrasi geofencing ditambah |
+| Dokumen                               | Isi dokumen                                                                                                   | Kenyataan kode                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `RANCANGAN.md` bagian 3.2             | Seeder **gagal** (`scanned_at` NULL untuk `TIDAK_HADIR`)                                                      | Seeder **sudah diperbaiki** (`continue` untuk `TIDAK_HADIR`) dan **berjalan sukses** (1.013 record) |
+| `RANCANGAN.md` bagian 2.5, 2.10, 2.11 | Kolom `latitude/longitude/radius_meters/academic_year/distance_meters/location_status` ditandai **[rencana]** | **Sudah ada** di migrasi `...000010...`                                                             |
+| `DATABASE.md` bagian 2                | Menganggap status implementasi "hanya model `User`"                                                           | Benar untuk model, tetapi mengabaikan kolom geofencing yang sudah ditambahkan                       |
+| `QUERY.sql`                           | DDL 10 tabel tanpa kolom geofencing                                                                           | Migrasi **sudah punya** kolom geofencing → `QUERY.sql` bukan lagi representasi skema aktual         |
+| `DATABASE.md` bagian 12               | "Perbarui `QUERY.sql`, DBML, dan `DATABASE.md` bersamaan"                                                     | Belum dilakukan setelah migrasi geofencing ditambah                                                 |
 
 ### 4.6 Identitas aplikasi masih milik starter kit
 
@@ -215,11 +215,11 @@ Pint gagal pada 4 berkas dan test gagal pada `users.role`, pipeline CI akan gaga
 ## 5. Kualitas Kode & Konfigurasi
 
 - **Pint gagal** pada:
-  - `database/migrations/2026_09_25_000006_create_class_students_table.php`
-  - `database/migrations/2026_09_25_000007_create_teacher_assignments_table.php`
-  - `database/migrations/2026_09_25_000010_add_geofencing_and_academic_year_fields.php`
-  - `database/seeders/DatabaseSeeder.php`
-  - Perbaikan cepat: `composer lint`.
+    - `database/migrations/2026_09_25_000006_create_class_students_table.php`
+    - `database/migrations/2026_09_25_000007_create_teacher_assignments_table.php`
+    - `database/migrations/2026_09_25_000010_add_geofencing_and_academic_year_fields.php`
+    - `database/seeders/DatabaseSeeder.php`
+    - Perbaikan cepat: `composer lint`.
 - **PHPStan** (level 7) tidak dapat dijalankan di lingkungan tinjauan karena DLL
   turbo-ext untuk PHP 8.5 tidak ditemukan; perlu dicoba di lingkungan/CI lain untuk
   memastikan status sebenarnya.
@@ -237,19 +237,19 @@ Pint gagal pada 4 berkas dan test gagal pada `users.role`, pipeline CI akan gaga
 
 ## 6. Rekomendasi Berurutan (Prioritas)
 
-| # | Prioritas | Tindakan | Dampak |
-| --- | --- | --- | --- |
-| 1 | Kritis | Tambah `role` ke `UserFactory` dan cast/fillable `User` | Test bawaan hijau kembali |
-| 2 | Kritis | Buat model Eloquent + enum + relasi untuk 9 tabel domain | Fondasi seluruh fitur |
-| 3 | Tinggi | Buat controller, request, route, dan policy domain | Fitur dapat diakses |
-| 4 | Tinggi | Bangun halaman frontend: sesi/QR, scan, rekap, pencarian bertingkat | Fitur dapat dipakai |
-| 5 | Tinggi | Jalankan `composer lint` (Pint) lalu pertahankan CI hijau | Kualitas & pipeline |
-| 6 | Sedang | Aktifkan check constraint (`role`, `end_at > start_at`, `late_minutes >= 0`) | Integritas database |
-| 7 | Sedang | Selaraskan strategi enum (native enum PostgreSQL vs `VARCHAR`) antara migrasi dan `QUERY.sql` | Konsistensi runtime/DDL |
-| 8 | Sedang | Tangani `academic_year` NULL pada partial unique index | Cegah pelanggaran keanggotaan aktif |
-| 9 | Sedang | Sinkronkan `QUERY.sql`, `DATABASE.md`, dan `RANCANGAN.md` dengan migrasi geofencing | Dokumen tepercaya |
-| 10 | Rendah | Rapikan identitas (nama app, `APP_NAME`, tautan sidebar, tipe `User`) | Kerapian & UX |
-| 11 | Rendah | Tambah tabel `attendance_requests` bila alur persetujuan dikerjakan | Kelengkapan fitur |
+| #   | Prioritas | Tindakan                                                                                      | Dampak                              |
+| --- | --------- | --------------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1   | Kritis    | Tambah `role` ke `UserFactory` dan cast/fillable `User`                                       | Test bawaan hijau kembali           |
+| 2   | Kritis    | Buat model Eloquent + enum + relasi untuk 9 tabel domain                                      | Fondasi seluruh fitur               |
+| 3   | Tinggi    | Buat controller, request, route, dan policy domain                                            | Fitur dapat diakses                 |
+| 4   | Tinggi    | Bangun halaman frontend: sesi/QR, scan, rekap, pencarian bertingkat                           | Fitur dapat dipakai                 |
+| 5   | Tinggi    | Jalankan `composer lint` (Pint) lalu pertahankan CI hijau                                     | Kualitas & pipeline                 |
+| 6   | Sedang    | Aktifkan check constraint (`role`, `end_at > start_at`, `late_minutes >= 0`)                  | Integritas database                 |
+| 7   | Sedang    | Selaraskan strategi enum (native enum PostgreSQL vs `VARCHAR`) antara migrasi dan `QUERY.sql` | Konsistensi runtime/DDL             |
+| 8   | Sedang    | Tangani `academic_year` NULL pada partial unique index                                        | Cegah pelanggaran keanggotaan aktif |
+| 9   | Sedang    | Sinkronkan `QUERY.sql`, `DATABASE.md`, dan `RANCANGAN.md` dengan migrasi geofencing           | Dokumen tepercaya                   |
+| 10  | Rendah    | Rapikan identitas (nama app, `APP_NAME`, tautan sidebar, tipe `User`)                         | Kerapian & UX                       |
+| 11  | Rendah    | Tambah tabel `attendance_requests` bila alur persetujuan dikerjakan                           | Kelengkapan fitur                   |
 
 ---
 

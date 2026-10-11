@@ -17,17 +17,19 @@ const OutOfRangeAlertModal: React.FC<AlertModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-6 backdrop-blur-xs animate-fade-in">
-            <div className="bg-white rounded-[24px] p-6 w-full max-w-sm text-center relative shadow-2xl pt-14">
+        <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6 backdrop-blur-xs">
+            <div className="relative w-full max-w-sm rounded-[24px] bg-white p-6 pt-14 text-center shadow-2xl">
                 {/* Ikon Tanda Seru Melayang */}
-                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-[#1E3A8A] text-white rounded-full p-4 shadow-lg border-4 border-white">
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 transform">
+                    <div className="rounded-full border-4 border-white bg-[#1E3A8A] p-4 text-white shadow-lg">
                         <AlertCircle size={60} strokeWidth={2.5} />
                     </div>
                 </div>
 
-                <p className="text-sm text-gray-500 mb-2 font-medium">{title}</p>
-                <p className="text-[15px] font-semibold text-gray-900 leading-snug whitespace-pre-line">
+                <p className="mb-2 text-sm font-medium text-gray-500">
+                    {title}
+                </p>
+                <p className="text-[15px] leading-snug font-semibold whitespace-pre-line text-gray-900">
                     {message}
                 </p>
 
@@ -35,7 +37,7 @@ const OutOfRangeAlertModal: React.FC<AlertModalProps> = ({
                 <button
                     type="button"
                     onClick={onClose}
-                    className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-10 h-10 border-2 border-white/60 rounded-lg flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                    className="absolute -bottom-16 left-1/2 flex h-10 w-10 -translate-x-1/2 transform items-center justify-center rounded-lg border-2 border-white/60 text-white transition-colors hover:bg-white/10"
                     aria-label="Tutup"
                 >
                     <X size={20} />
