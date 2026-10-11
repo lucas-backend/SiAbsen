@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\AttendanceRecord;
+use App\Models\AttendanceRequest;
 use App\Models\AttendanceSession;
 use App\Models\SchoolClass;
 use App\Models\TeacherAssignment;
 use App\Models\User;
 use App\Policies\AttendanceRecordPolicy;
 use App\Policies\AttendanceReportPolicy;
+use App\Policies\AttendanceRequestPolicy;
 use App\Policies\AttendanceSessionPolicy;
 use App\Policies\ClassRoomPolicy;
 use App\Policies\TeacherAssignmentPolicy;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     protected $policies = [
         AttendanceSession::class => AttendanceSessionPolicy::class,
         AttendanceRecord::class => AttendanceRecordPolicy::class,
+        AttendanceRequest::class => AttendanceRequestPolicy::class,
         SchoolClass::class => ClassRoomPolicy::class,
         TeacherAssignment::class => TeacherAssignmentPolicy::class,
     ];

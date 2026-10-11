@@ -288,6 +288,15 @@ export default function Dashboard() {
                             <ArrowRight size={14} />
                         </Link>
                     )}
+                    {!isStudent && (
+                        <Link
+                            href={attendance.requests.review.page()}
+                            className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-3 text-xs font-semibold text-[#1E3A8A] shadow-xs hover:bg-blue-50/50"
+                        >
+                            <span>Persetujuan Izin</span>
+                            <ArrowRight size={14} />
+                        </Link>
+                    )}
                 </div>
 
                 <div className="mt-6 px-5">

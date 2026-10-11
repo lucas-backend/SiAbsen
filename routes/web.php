@@ -22,6 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('attendance/sessions/{attendanceSession}', [AttendanceSessionController::class, 'show'])->name('attendance.sessions.show');
         Route::get('attendance/assignments', AttendanceAssignmentController::class)->name('attendance.assignments.index');
 
+        Route::get('attendance/requests', [AttendanceRequestController::class, 'index'])->name('attendance.requests.index');
+        Route::patch('attendance/requests/{attendanceRequest}', [AttendanceRequestController::class, 'review'])->name('attendance.requests.review');
+        Route::inertia('attendance/requests/review', 'attendance/requests')->name('attendance.requests.review.page');
+
         Route::get('academic/search', AcademicSearchController::class)->name('academic.search');
 
         Route::get('reports', [AttendanceReportController::class, 'index'])->name('reports.index');

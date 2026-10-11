@@ -67,3 +67,24 @@ export type StudentAttendanceHistoryItem = {
     location_status: LocationStatus | null;
     distance_meters: number | null;
 };
+
+export type AttendanceRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export type AttendanceRequestItem = {
+    id: number;
+    session_id: number;
+    student_id: number;
+    student_name: string | null;
+    student_number: string | null;
+    class_name: string | null;
+    session_date: string | null;
+    requested_status: 'IZIN' | 'SAKIT';
+    requested_status_label: string;
+    reason: string | null;
+    status: AttendanceRequestStatus;
+    status_label: string;
+    reviewed_by: number | null;
+    reviewer_name: string | null;
+    reviewed_at: string | null;
+    created_at: string | null;
+};

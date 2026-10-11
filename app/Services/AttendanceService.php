@@ -2,13 +2,16 @@
 
 namespace App\Services;
 
+use App\Enums\AttendanceRequestStatus;
 use App\Enums\AttendanceStatus;
 use App\Models\AttendanceRecord;
+use App\Models\AttendanceRequest;
 use App\Models\AttendanceSession;
 use App\Models\SchoolClass;
 use App\Models\TeacherAssignment;
 use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -237,5 +240,55 @@ class AttendanceService
                 ];
             })
             ->all();
+    }
+
+    /**
+     * Tinjau (setujui/tolak) pengajuan izin/sakit.
+     *
+     * Saat disetujui, catatan kehadiran siswa untuk sesi tersebut ditulis
+     * atau diperbarui menjadi IZIN/SAKIT. Audit peninjau selalu dicatat.
+     */
+    public function reviewRequest(
+        User $reviewer,
+        AttendanceRequest $attendanceRequest,
+        AttendanceRequestStatus $status,
+    ): AttendanceRequest {
+        if ($attendanceRequest->status !== AttendanceRequestStatus::Pending) {
+            throw ValidationException::withMessages([
+                'status' => __('Pengajuan ini sudah ditinjau.'),
+            ]);
+        }
+
+        return DB::transaction(function () use ($reviewer, $attendanceRequest, $status): AttendanceRequest {
+            $reviewedAt = CarbonImmutable::now();
+
+            $attendanceRequest->forceFill([
+                'status' => $status,
+                'reviewed_by' => $reviewer->getKey(),
+                'reviewed_at' => $reviewedAt,
+            ])->save();
+
+            $requestedStatus = $attendanceRequest->requested_status;
+
+            if ($status === AttendanceRequestStatus::Approved && $requestedStatus instanceof AttendanceStatus) {
+                AttendanceRecord::query()->updateOrCreate(
+                    [
+                        'session_id' => $attendanceRequest->session_id,
+                        'student_id' => $attendanceRequest->student_id,
+                    ],
+                    [
+                        'scanned_at' => $reviewedAt,
+                        'status' => $requestedStatus,
+                        'late_minutes' => null,
+                        'latitude' => null,
+                        'longitude' => null,
+                        'distance_meters' => null,
+                        'location_status' => null,
+                    ],
+                );
+            }
+
+            return $attendanceRequest->refresh();
+        });
     }
 }

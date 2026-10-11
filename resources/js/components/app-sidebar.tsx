@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, ClipboardCheck, FolderGit2, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -13,8 +13,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import attendance from '@/routes/attendance';
 import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
+import type { Auth, NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
@@ -23,6 +24,12 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
 ];
+
+const reviewNavItem: NavItem = {
+    title: 'Persetujuan Izin',
+    href: attendance.requests.review.page(),
+    icon: ClipboardCheck,
+};
 
 const footerNavItems: NavItem[] = [
     {
@@ -38,6 +45,13 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<{ auth?: Auth }>().props;
+    const role = auth?.user?.role;
+    const items =
+        role === 'TEACHER' || role === 'ADMIN'
+            ? [...mainNavItems, reviewNavItem]
+            : mainNavItems;
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -53,7 +67,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={items} />
             </SidebarContent>
 
             <SidebarFooter>
