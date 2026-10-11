@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 /**
  * @property int $id
@@ -42,5 +45,36 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function studentProfile(): HasOne
+    {
+        return $this->hasOne(StudentProfile::class, 'user_id');
+    }
+
+    public function teacherProfile(): HasOne
+    {
+        return $this->hasOne(TeacherProfile::class, 'user_id');
+    }
+
+    public function classMemberships(): HasMany
+    {
+        return $this->hasMany(ClassStudent::class, 'student_id');
+    }
+
+    public function teacherAssignments(): HasMany
+    {
+        return $this->hasMany(TeacherAssignment::class, 'teacher_id');
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class, 'student_id');
+    }
+
+    public function reviewedAttendanceSessions(): HasMany
+    {
+        return $this->hasMany(AttendanceSession::class, 'created_by');
     }
 }
