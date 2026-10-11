@@ -14,8 +14,14 @@ void createInertiaApp({
         switch (true) {
             case name === 'welcome':
                 return null;
+            case name === 'dashboard':
+                return null;
+            case name.startsWith('teacher/'):
+                return null;
+            case name.startsWith('student/'):
+                return null;
             case name.startsWith('auth/'):
-                return AuthLayout;
+                return null;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
             default:
