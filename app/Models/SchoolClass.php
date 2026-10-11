@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $education_level_id
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $radius_meters
+ */
 class SchoolClass extends Model
 {
     /** @use HasFactory<SchoolClassFactory> */

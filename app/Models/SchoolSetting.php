@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property float $latitude
- * @property float $longitude
- * @property int $radius_meters
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $radius_meters
  */
 class SchoolSetting extends Model
 {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -18,8 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->alias([
-            'role' => \App\Http\Middleware\EnsureRole::class,
-            'ensure.role' => \App\Http\Middleware\EnsureRole::class,
+            'role' => EnsureRole::class,
+            'ensure.role' => EnsureRole::class,
         ]);
 
         $middleware->web(append: [

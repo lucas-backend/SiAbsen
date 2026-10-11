@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AttendanceStatus;
+use App\Enums\LocationStatus;
 use Database\Factories\AttendanceRecordFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property float|null $latitude
  * @property float|null $longitude
  * @property int|null $distance_meters
- * @property string|null $location_status
+ * @property LocationStatus|null $location_status
  */
 class AttendanceRecord extends Model
 {
@@ -47,6 +48,7 @@ class AttendanceRecord extends Model
             'latitude' => 'float',
             'longitude' => 'float',
             'distance_meters' => 'integer',
+            'location_status' => LocationStatus::class,
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
         ];

@@ -10,9 +10,9 @@ return new class extends Migration
     {
         if (Schema::getConnection()->getDriverName() !== 'sqlite') {
             DB::statement("ALTER TABLE users ADD CONSTRAINT chk_users_role CHECK (role IN ('STUDENT','TEACHER','ADMIN'))");
-            DB::statement("ALTER TABLE attendance_sessions ADD CONSTRAINT chk_attendance_sessions_time CHECK (end_at > start_at)");
+            DB::statement('ALTER TABLE attendance_sessions ADD CONSTRAINT chk_attendance_sessions_time CHECK (end_at > start_at)');
             DB::statement("ALTER TABLE attendance_records ADD CONSTRAINT chk_attendance_records_status CHECK (status IN ('HADIR','TERLAMBAT','TIDAK_HADIR','IZIN','SAKIT'))");
-            DB::statement("ALTER TABLE attendance_records ADD CONSTRAINT chk_attendance_records_late_minutes CHECK (late_minutes IS NULL OR late_minutes >= 0)");
+            DB::statement('ALTER TABLE attendance_records ADD CONSTRAINT chk_attendance_records_late_minutes CHECK (late_minutes IS NULL OR late_minutes >= 0)');
             DB::statement("ALTER TABLE attendance_requests ADD CONSTRAINT chk_attendance_requests_req_status CHECK (requested_status IN ('IZIN','SAKIT','HADIR','TERLAMBAT'))");
             DB::statement("ALTER TABLE attendance_requests ADD CONSTRAINT chk_attendance_requests_status CHECK (status IN ('PENDING','APPROVED','REJECTED'))");
         } else {
@@ -31,7 +31,5 @@ return new class extends Migration
         }
     }
 
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 };

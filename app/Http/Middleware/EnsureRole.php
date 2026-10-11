@@ -28,8 +28,7 @@ class EnsureRole
         foreach ($roles as $role) {
             $roleUpper = strtoupper($role);
             if (($roleUpper === 'TEACHER' && $user->isTeacher()) ||
-                ($roleUpper === 'STUDENT' && $user->isStudent()) ||
-                ($roleUpper === 'ADMIN' && $user->isAdmin())) {
+                ($roleUpper === 'STUDENT' && $user->isStudent())) {
                 return $next($request);
             }
         }
