@@ -1,11 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/react-starter-kit",
+    "name": "lucas-backend/siabsen",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "SiAbsen - aplikasi absensi sekolah berbasis web.",
     "keywords": [
-        "laravel",
-        "framework"
+        "siabsen",
+        "absensi",
+        "sekolah",
+        "laravel"
     ],
     "license": "MIT",
     "require": {

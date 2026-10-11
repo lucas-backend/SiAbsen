@@ -141,6 +141,12 @@ Semua akun memakai password `password`.
 | Guru  | `guru1@siabsen.com` s/d `guru10@siabsen.com`    |
 | Siswa | `siswa1@siabsen.com` s/d `siswa120@siabsen.com` |
 
+## Manajemen akun & kata sandi
+
+- Pendaftaran mandiri (registrasi publik) **tidak tersedia**. Seluruh akun dibuat oleh admin sekolah melalui proses seeding atau pengelolaan internal.
+- Pemulihan kata sandi **tidak melalui email**. Pada halaman login, tombol "Lupa kata sandi?" menampilkan instruksi untuk menghubungi TU/admin. Reset kata sandi dilakukan oleh admin.
+- Pengguna yang sudah masuk dapat mengubah kata sandinya sendiri melalui **Settings → Security**.
+
 ## Perintah umum
 
 | Perintah               | Keterangan                                    |

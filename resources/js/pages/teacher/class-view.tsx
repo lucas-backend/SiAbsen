@@ -317,7 +317,7 @@ export default function TeacherClassView() {
 
     return (
         <>
-            <Head title="Tampilan Guru - EduPresence" />
+            <Head title="Tampilan Guru - SiAbsen" />
             <div className="relative mx-auto min-h-screen max-w-md bg-slate-50 pb-6 shadow-2xl">
                 <div className="relative flex items-center gap-3 overflow-hidden bg-[#1E3A8A] px-4 pt-12 pb-6">
                     <Link

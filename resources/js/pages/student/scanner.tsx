@@ -178,7 +178,7 @@ export default function AttendanceScanner({
     if (view === 'scan') {
         return (
             <>
-                <Head title="Scan QR Absen - EduPresence" />
+                <Head title="Scan QR Absen - SiAbsen" />
                 <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-between bg-[#4a4a4a] shadow-2xl">
                     <div className="flex items-center gap-4 px-6 pt-12 text-white">
                         <Link
@@ -317,8 +317,8 @@ export default function AttendanceScanner({
             <Head
                 title={
                     isSuccess
-                        ? 'Absen Berhasil - EduPresence'
-                        : 'Absen Gagal - EduPresence'
+                        ? 'Absen Berhasil - SiAbsen'
+                        : 'Absen Gagal - SiAbsen'
                 }
             />
             <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center bg-white px-6 text-center shadow-2xl">

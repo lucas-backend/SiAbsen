@@ -270,7 +270,7 @@ class AttendanceService
 
             $requestedStatus = $attendanceRequest->requested_status;
 
-            if ($status === AttendanceRequestStatus::Approved && $requestedStatus instanceof AttendanceStatus) {
+            if ($status === AttendanceRequestStatus::Approved) {
                 AttendanceRecord::query()->updateOrCreate(
                     [
                         'session_id' => $attendanceRequest->session_id,

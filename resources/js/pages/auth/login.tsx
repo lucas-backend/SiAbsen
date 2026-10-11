@@ -41,13 +41,13 @@ export default function Login({
     if (view === 'splash') {
         return (
             <>
-                <Head title="EduPresence" />
+                <Head title="SiAbsen" />
                 <div
                     onClick={() => setView('login')}
                     className="flex min-h-screen cursor-pointer flex-col items-center justify-center bg-[#1E3A8A] select-none"
                 >
                     <h1 className="animate-pulse text-3xl font-medium tracking-wide text-white italic">
-                        edupresence
+                        SiAbsen
                     </h1>
                 </div>
             </>
@@ -56,14 +56,14 @@ export default function Login({
 
     return (
         <>
-            <Head title="Masuk Ke Akun - EduPresence" />
+            <Head title="Masuk Ke Akun - SiAbsen" />
             <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-between bg-slate-50 shadow-2xl">
                 <div>
                     {/* Header Biru */}
                     <div className="relative overflow-hidden rounded-br-[100px] bg-[#1E3A8A] px-6 pt-12 pb-8">
                         <div className="absolute top-0 right-0 -mt-10 -mr-10 h-48 w-48 rounded-full bg-white/5 blur-sm"></div>
                         <h2 className="mb-8 text-center text-xl font-medium text-white italic">
-                            edupresence
+                            SiAbsen
                         </h2>
                         <p className="text-sm text-blue-100">
                             Selamat datang user!
@@ -96,7 +96,7 @@ export default function Login({
                                 }
                                 placeholder="yostiarjagodesain@students.unila.ac.id"
                                 required
-                                className="w-full rounded-xl border border-gray-100 bg-white px-4 py-4 text-sm focus:ring-2 focus:ring-[#1E3A8A] focus:outline-none text-black"
+                                className="w-full rounded-xl border border-gray-100 bg-white px-4 py-4 text-sm text-black focus:ring-2 focus:ring-[#1E3A8A] focus:outline-none"
                             />
                             {errors.email && (
                                 <p className="mt-1 text-xs font-medium text-rose-500">
@@ -117,7 +117,7 @@ export default function Login({
                                 }
                                 placeholder="***************"
                                 required
-                                className="w-full rounded-xl border border-gray-100 bg-white px-4 py-4 pr-12 text-sm focus:ring-2 focus:ring-[#1E3A8A] focus:outline-none text-black"
+                                className="w-full rounded-xl border border-gray-100 bg-white px-4 py-4 pr-12 text-sm text-black focus:ring-2 focus:ring-[#1E3A8A] focus:outline-none"
                             />
                             <button
                                 type="button"
@@ -158,7 +158,7 @@ export default function Login({
                 </div>
 
                 <div className="py-6 text-center text-xs text-gray-400">
-                    EduPresence &copy; {new Date().getFullYear()}
+                    SiAbsen &copy; {new Date().getFullYear()}
                 </div>
 
                 {/* Modal Peringatan */}

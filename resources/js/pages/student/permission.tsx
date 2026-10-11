@@ -115,7 +115,7 @@ export default function PermissionForm() {
 
     return (
         <>
-            <Head title="Permintaan Izin - EduPresence" />
+            <Head title="Permintaan Izin - SiAbsen" />
             <div className="relative mx-auto flex min-h-screen max-w-md flex-col bg-slate-50 font-sans shadow-2xl">
                 <div className="relative flex shrink-0 items-center gap-3 overflow-hidden rounded-b-2xl bg-[#1E3A8A] px-4 pt-12 pb-6">
                     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-64 w-64 rounded-full bg-white/5" />

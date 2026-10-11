@@ -187,7 +187,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <Head title="Dashboard - EduPresence" />
+            <Head title="Dashboard - SiAbsen" />
             <div className="relative mx-auto min-h-screen max-w-md bg-slate-50 pb-8 font-sans shadow-2xl">
                 <div className="relative overflow-hidden rounded-br-[80px] bg-[#1E3A8A] px-6 pt-12 pb-16">
                     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-64 w-64 rounded-full bg-white/5" />
