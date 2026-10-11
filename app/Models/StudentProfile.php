@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $user_id
+ * @property string $student_number
+ * @property int $education_level_id
+ */
 class StudentProfile extends Model
 {
     protected $primaryKey = 'user_id';

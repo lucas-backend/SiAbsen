@@ -7,12 +7,11 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-
 
 /**
  * @property int $id
@@ -27,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role', 'phone', 'birth_date'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -47,12 +46,17 @@ class User extends Authenticatable
         ];
     }
 
-
+    /**
+     * @return HasOne<StudentProfile, $this>
+     */
     public function studentProfile(): HasOne
     {
         return $this->hasOne(StudentProfile::class, 'user_id');
     }
 
+    /**
+     * @return HasOne<TeacherProfile, $this>
+     */
     public function teacherProfile(): HasOne
     {
         return $this->hasOne(TeacherProfile::class, 'user_id');
@@ -76,5 +80,15 @@ class User extends Authenticatable
     public function reviewedAttendanceSessions(): HasMany
     {
         return $this->hasMany(AttendanceSession::class, 'created_by');
+    }
+
+    public function isTeacher(): bool
+    {
+        return strtoupper((string) ($this->role ?? '')) === 'TEACHER';
+    }
+
+    public function isStudent(): bool
+    {
+        return strtoupper((string) ($this->role ?? '')) === 'STUDENT';
     }
 }
